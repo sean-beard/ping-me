@@ -7,9 +7,16 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "migrate": "npx prisma migrate dev --name",
+    "seed": "npx ts-node --esm ./seed.ts"
   },
   "dependencies": {
+    "@prisma/client": "4.16.2",
     "astro": "^2.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "prisma": "^4.16.2"
   }
 }

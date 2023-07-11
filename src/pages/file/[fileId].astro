@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { fileService } from "../../services";
+const { fileId } = Astro.params;
+
+const fileIdNum = Number(fileId);
+
+const file =
+    fileIdNum && !Number.isNaN(fileIdNum)
+        ? await fileService.getFile(fileIdNum)
+        : null;
+---
+
+<Layout title="File | PingMe">
+    {!file && <h2>File not found</h2>}
+
+    {
+        file && (
+            <div id="file">
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                    }}
+                >
+                    <h2>{file.name}</h2>
+
+                    <button
+                        hx-get={`/file/${file.id}/edit.json`}
+                        hx-swap="outerHTML"
+                        hx-target="#file"
+                        style={{
+                            width: "100px",
+                            height: "50px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        Edit
+                    </button>
+                </div>
+
+                <div set:html={file.html} />
+            </div>
+        )
+    }
+</Layout>
