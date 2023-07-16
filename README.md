@@ -4,7 +4,7 @@ Application to remind you of whatever you want, whenever you want.
 
 ## Development
 
-This codebase is using the Astro framework with TypeScript, [SQLite](https://www.sqlite.org/index.html) for the database, [Prisma](https://www.prisma.io/) as the ORM and [HTMX](https://htmx.org/) for most client-side JavaScript.
+This codebase is using [the Astro framework](https://docs.astro.build) with TypeScript, [SQLite](https://www.sqlite.org/index.html) for the database, [Prisma](https://www.prisma.io/) as the ORM and [HTMX](https://htmx.org/) for most client-side JavaScript.
 
 ### Getting started
 
