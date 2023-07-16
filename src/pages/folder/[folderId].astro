@@ -24,6 +24,14 @@ const files = folder ? await folderService.getFiles(folder.id) : [];
                 <>
                     <h2>{folder.name}</h2>
 
+                    <button
+                        hx-get={`/folder/${folder.id}/file/random.json`}
+                        hx-target="main"
+                        hx-swap="beforeend"
+                    >
+                        Get random file
+                    </button>
+
                     <section>
                         <h3>Files</h3>
 
