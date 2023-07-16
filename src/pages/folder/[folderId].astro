@@ -1,0 +1,45 @@
+---
+import FileList from "@/components/FileList.astro";
+import Layout from "@/layouts/Layout.astro";
+import { folderService } from "@/services";
+
+const { folderId } = Astro.params;
+
+const folderIdNum = Number(folderId);
+
+const folder =
+    folderIdNum && !Number.isNaN(folderIdNum)
+        ? await folderService.getFolder(folderIdNum)
+        : null;
+
+const files = folder ? await folderService.getFiles(folder.id) : [];
+---
+
+<Layout title="Folder | PingMe">
+    <main>
+        {!folder && <h2>Folder not found</h2>}
+
+        {
+            folder && (
+                <>
+                    <h2>{folder.name}</h2>
+
+                    <section>
+                        <h3>Files</h3>
+
+                        {!!files?.length && (
+                            <FileList files={files} folderId={folder.id} />
+                        )}
+                    </section>
+
+                    <button
+                        hx-patch={`/folder/${folder.id}/edit.json`}
+                        hx-swap="outerHTML"
+                    >
+                        Add files to folder
+                    </button>
+                </>
+            )
+        }
+    </main>
+</Layout>

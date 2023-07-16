@@ -1,0 +1,34 @@
+---
+import FileList from "@/components/FileList.astro";
+import FolderList from "@/components/FolderList.astro";
+import Layout from "@/layouts/Layout.astro";
+import { fileService, folderService } from "@/services";
+
+const folders = await folderService.getFolders();
+
+const files = await fileService.getFiles();
+---
+
+<Layout title="Home | PingMe">
+	<main>
+		{folders && <FolderList folders={folders} />}
+
+		<section>
+			<h2>Files</h2>
+
+			<a href="/file/new">Create File</a>
+
+			{files && <FileList files={files} />}
+		</section>
+	</main>
+</Layout>
+
+<style>
+	main {
+		padding: 1.5rem;
+	}
+
+	li {
+		margin-bottom: 1rem;
+	}
+</style>

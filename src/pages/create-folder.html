@@ -1,0 +1,7 @@
+<form hx-post="/folder.json" hx-target="this" hx-swap="outerHTML">
+  <label for="folder-name">Folder name</label>
+  <input type="text" id="folder-name" name="folderName" />
+
+  <button type="submit">Create</button>
+  <button hx-get="create-folder-button">Cancel</button>
+</form>

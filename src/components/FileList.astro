@@ -1,0 +1,30 @@
+---
+import type { File } from "@/services/types";
+
+interface Props {
+    files: File[];
+    folderId?: number;
+}
+
+const { files, folderId } = Astro.props;
+---
+
+<ul id="file-list">
+    {
+        files.map((file) => (
+            <li>
+                <a href={`/file/${file.id}`}>{file.name}</a>
+
+                <button
+                    hx-delete={
+                        folderId
+                            ? `/folder/${folderId}/file/${file.id}.json`
+                            : `/file/${file.id}/delete.json`
+                    }
+                >
+                    Delete
+                </button>
+            </li>
+        ))
+    }
+</ul>
