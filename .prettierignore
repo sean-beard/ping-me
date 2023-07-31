@@ -1,0 +1,10 @@
+generated
+node_modules
+coverage
+.vscode
+dist
+*.graphql
+*.json
+*.md
+docker-compose.yml
+.eslintrc.js
