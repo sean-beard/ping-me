@@ -13,7 +13,7 @@ export const post: APIRoute = async ({ request }) => {
       JSON.stringify({ error: "File name and body are required" }),
       {
         status: 400,
-      }
+      },
     );
   }
 

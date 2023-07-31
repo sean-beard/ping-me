@@ -59,7 +59,7 @@ export const put: APIRoute = async ({ request, params }) => {
   if (!fileName || !fileBody) {
     return new Response(
       JSON.stringify({ error: "File name and body are required" }),
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -73,7 +73,7 @@ export const put: APIRoute = async ({ request, params }) => {
   if (!updatedFile) {
     return new Response(
       JSON.stringify({ error: "Error updating file with ID: " + fileId }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 

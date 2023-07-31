@@ -28,7 +28,7 @@ export class FolderService {
 
   async updateFolder(
     id: number,
-    folder: Partial<Folder>
+    folder: Partial<Folder>,
   ): Promise<Folder | null> {
     const updatedFolder = await this.folderRepository.updateFolder(id, folder);
 
@@ -49,11 +49,11 @@ export class FolderService {
 
   async deleteFiles(
     folderId: number,
-    fileIds: number[]
+    fileIds: number[],
   ): Promise<Folder | null> {
     const updatedFolder = await this.folderRepository.deleteFiles(
       folderId,
-      fileIds
+      fileIds,
     );
 
     return updatedFolder;
