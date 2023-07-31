@@ -10,3 +10,9 @@ export interface File {
   html: string;
   userId: number;
 }
+
+export interface User {
+  id: number;
+  username: string;
+  passwordHash: string;
+}

@@ -1,4 +1,4 @@
-import type { Folder, File } from "../services/types";
+import type { Folder, File, User } from "src/services/types";
 
 export interface FolderRepository {
   getFolders(): Promise<Folder[] | null>;
@@ -17,4 +17,9 @@ export interface FileRepository {
   createFile(file: Omit<File, "id" | "userId">): Promise<File | null>;
   updateFile(id: number, newFile: Partial<File>): Promise<File | null>;
   deleteFile(id: number): Promise<number | null>;
+}
+
+export interface UserRepository {
+  getUser(username: string): Promise<User | null>;
+  createUser(username: string, passwordHash: string): Promise<User | null>;
 }
