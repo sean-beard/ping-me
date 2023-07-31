@@ -66,7 +66,7 @@ export const put: APIRoute = async ({ request, params }) => {
       JSON.stringify({ error: "Error updating folder with ID: " + folderId }),
       {
         status: 500,
-      }
+      },
     );
   }
 

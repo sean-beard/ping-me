@@ -25,7 +25,7 @@ export const del: APIRoute = async ({ params }) => {
   if (!updatedFolder) {
     return new Response(
       JSON.stringify({ error: "Error deleting file with ID: " + fileId }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 

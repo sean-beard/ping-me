@@ -49,7 +49,7 @@ export class PrismaFolderRepository implements FolderRepository {
 
   async updateFolder(
     id: number,
-    newFolder: Partial<Folder>
+    newFolder: Partial<Folder>,
   ): Promise<Folder | null> {
     try {
       const folder = await this.client.folder.update({
@@ -98,7 +98,7 @@ export class PrismaFolderRepository implements FolderRepository {
       console.error(error);
 
       console.error(
-        "File IDs: " + JSON.stringify(files.map((file) => file.id))
+        "File IDs: " + JSON.stringify(files.map((file) => file.id)),
       );
       return null;
     }
@@ -129,7 +129,7 @@ export class PrismaFolderRepository implements FolderRepository {
 
   async deleteFiles(
     folderId: number,
-    fileIds: number[]
+    fileIds: number[],
   ): Promise<Folder | null> {
     try {
       const updatedFolder = await this.client.folder.update({
