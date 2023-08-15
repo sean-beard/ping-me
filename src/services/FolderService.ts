@@ -58,4 +58,14 @@ export class FolderService {
 
     return updatedFolder;
   }
+
+  async getRandomFile(folderId: number): Promise<File | null> {
+    const files = await this.folderRepository.getFiles(folderId);
+
+    if (!files) {
+      return null;
+    }
+
+    return files[Math.floor(Math.random() * files.length)];
+  }
 }

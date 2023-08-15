@@ -7,7 +7,7 @@ export interface FolderRepository {
   updateFolder(id: number, newFolder: Partial<Folder>): Promise<Folder | null>;
   deleteFolder(id: number): Promise<number | null>;
   addFiles(id: number, files: File[]): Promise<Folder | null>;
-  getFiles(id: number): Promise<File[] | null>;
+  getFiles(folderId: number): Promise<File[] | null>;
   deleteFiles(folderId: number, fileIds: number[]): Promise<Folder | null>;
 }
 

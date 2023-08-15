@@ -104,10 +104,10 @@ export class PrismaFolderRepository implements FolderRepository {
     }
   }
 
-  async getFiles(id: number): Promise<File[] | null> {
+  async getFiles(folderId: number): Promise<File[] | null> {
     try {
       const folder = await this.client.folder.findUnique({
-        where: { id },
+        where: { id: folderId },
         select: {
           files: {
             select: {
@@ -122,7 +122,7 @@ export class PrismaFolderRepository implements FolderRepository {
 
       return folder?.files ?? null;
     } catch {
-      console.error("Error getting files for folder with ID: " + id);
+      console.error("Error getting files for folder with ID: " + folderId);
       return null;
     }
   }
