@@ -11,6 +11,30 @@ const files = await fileService.getFiles();
 
 <Layout title="Home | PingMe">
 	<main>
+		<h2>Sign up</h2>
+
+		<form hx-post="/sign-up.json" hx-target="this" hx-swap="outerHTML" method="POST">
+			<label for="username">Username</label>
+			<input type="text" name="username" id="username" />
+
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password" />
+
+			<button type="submit">Sign up</button>
+		</form>
+
+		<h2>Login</h2>
+
+		<form hx-post="/login.json" hx-target="this" hx-swap="outerHTML" method="POST">
+			<label for="username">Username</label>
+			<input type="text" name="username" id="username" />
+
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password" />
+
+			<button type="submit">Login</button>
+		</form>
+
 		{folders && <FolderList folders={folders} />}
 
 		<section>

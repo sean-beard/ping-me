@@ -11,22 +11,23 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  firstName String
-  lastName  String
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String?
+  firstName String?
+  lastName  String?
   files     File[]
   folders   Folder[]
-  // password  Password?
+  password  Password?
   // Session   Session[]
 }
 
-// model Password {
-//   hash String
+model Password {
+  hash String
 
-//   user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-//   userId Int  @unique
-// }
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId Int  @unique
+}
 
 // model Session {
 //   id             String   @id @default(uuid())
