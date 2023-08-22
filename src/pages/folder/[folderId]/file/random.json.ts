@@ -18,7 +18,7 @@ export const get: APIRoute = async ({ params }) => {
       JSON.stringify({
         error: "Error getting random file from folder with ID: " + folderId,
       }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 

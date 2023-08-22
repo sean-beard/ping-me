@@ -4,24 +4,24 @@ import type { Folder } from "../services/types";
 import { FolderRow } from "./FolderRow";
 
 interface Props {
-    folders: Folder[];
+  folders: Folder[];
 }
 
 const { folders } = Astro.props;
 ---
 
 <section>
-    <h2>Folders</h2>
+  <h2>Folders</h2>
 
-    <CreateFolderButton />
+  <CreateFolderButton />
 
-    <ul id="folder-list" hx-target="closest li" hx-swap="outerHTML">
-        {
-            (folders || []).map((folder) => {
-                const row = FolderRow({ folder });
+  <ul id="folder-list" hx-target="closest li" hx-swap="outerHTML">
+    {
+      (folders || []).map((folder) => {
+        const row = FolderRow({ folder });
 
-                return <Fragment set:html={row} />;
-            })
-        }
-    </ul>
+        return <Fragment set:html={row} />;
+      })
+    }
+  </ul>
 </section>
