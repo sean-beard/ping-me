@@ -32,13 +32,15 @@ export class PrismaFileRepository implements FileRepository {
     return file;
   }
 
-  async createFile(file: Omit<File, "id" | "userId">): Promise<File | null> {
+  async createFile(
+    file: Omit<File, "id" | "userId">,
+    userId: number,
+  ): Promise<File | null> {
     const newFile = await this.client.file.create({
       data: {
         name: file.name,
         html: file.html,
-        // TODO: Replace this with the actual user ID
-        user: { connect: { id: 1 } },
+        user: { connect: { id: userId } },
       },
       select: { id: true, name: true, html: true, userId: true },
     });

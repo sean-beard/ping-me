@@ -32,14 +32,14 @@ export class PrismaFolderRepository implements FolderRepository {
     return folder;
   }
 
-  async createFolder(folderName: string): Promise<Folder | null> {
+  async createFolder(
+    folderName: string,
+    userId: number,
+  ): Promise<Folder | null> {
     const folder = await this.client.folder.create({
       data: {
         name: folderName,
-        User: {
-          // TODO: Replace this with the actual user ID
-          connect: { id: 1 },
-        },
+        User: { connect: { id: userId } },
       },
       select: { id: true, name: true, userId: true },
     });
