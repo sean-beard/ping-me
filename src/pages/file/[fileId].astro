@@ -1,14 +1,22 @@
 ---
+import { getUser } from "@/utils/auth";
 import Layout from "../../layouts/Layout.astro";
 import { fileService } from "../../services";
 const { fileId } = Astro.params;
 
 const fileIdNum = Number(fileId);
 
+const user = getUser(Astro.cookies)
+
+if (!user) {
+  // Astro.redirect("/login");
+  return;
+}
+
 const file =
-    fileIdNum && !Number.isNaN(fileIdNum)
-        ? await fileService.getFile(fileIdNum)
-        : null;
+  fileIdNum && !Number.isNaN(fileIdNum)
+    ? await fileService.getFile(fileIdNum, user.id)
+    : null;
 ---
 
 <Layout title="File | PingMe">

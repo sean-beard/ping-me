@@ -9,16 +9,17 @@ export class PrismaFolderRepository implements FolderRepository {
     this.client = new PrismaClient();
   }
 
-  async getFolders(): Promise<Folder[] | null> {
+  async getFolders(userId: number): Promise<Folder[] | null> {
     try {
       const folders = await this.client.folder.findMany({
         select: { id: true, name: true, userId: true },
+        where: { userId },
         orderBy: { id: "desc" },
       });
 
       return folders;
     } catch {
-      console.error("Error getting folders");
+      console.error("Error getting folders for user with ID: " + userId);
       return null;
     }
   }

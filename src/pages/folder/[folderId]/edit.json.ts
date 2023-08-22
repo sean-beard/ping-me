@@ -1,9 +1,17 @@
 import type { APIRoute } from "astro";
 
+import { getUser, isAuthenticated } from "@/utils/auth";
 import { fileService, folderService } from "../../../services";
 import { FolderRow } from "../../../components/FolderRow";
 
-export const get: APIRoute = async ({ params }) => {
+export const get: APIRoute = async ({ params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const folderId = params.folderId;
 
   if (!folderId || isNaN(Number(folderId))) {
@@ -12,7 +20,15 @@ export const get: APIRoute = async ({ params }) => {
     });
   }
 
-  const folder = await folderService.getFolder(Number(folderId));
+  const user = getUser(cookies);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found." }), {
+      status: 404,
+    });
+  }
+
+  const folder = await folderService.getFolder(Number(folderId), user.id);
 
   if (!folder) {
     return new Response(JSON.stringify({ error: "Folder not found" }), {
@@ -38,7 +54,14 @@ export const get: APIRoute = async ({ params }) => {
   return new Response(html, { status: 200 });
 };
 
-export const put: APIRoute = async ({ request, params }) => {
+export const put: APIRoute = async ({ request, params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const folderId = params.folderId;
 
   if (!folderId || isNaN(Number(folderId))) {
@@ -75,7 +98,14 @@ export const put: APIRoute = async ({ request, params }) => {
   return new Response(response, { status: 200 });
 };
 
-export const patch: APIRoute = async ({ params }) => {
+export const patch: APIRoute = async ({ params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const folderId = params.folderId;
 
   if (!folderId || isNaN(Number(folderId))) {
@@ -84,7 +114,15 @@ export const patch: APIRoute = async ({ params }) => {
     });
   }
 
-  const files = await fileService.getFiles();
+  const user = getUser(cookies);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found." }), {
+      status: 404,
+    });
+  }
+
+  const files = await fileService.getFiles(user.id);
 
   if (!files) {
     return new Response(JSON.stringify({ error: "Error getting files." }), {
@@ -92,7 +130,11 @@ export const patch: APIRoute = async ({ params }) => {
     });
   }
 
-  const updatedFolder = await folderService.addFiles(Number(folderId), files);
+  const updatedFolder = await folderService.addFiles(
+    Number(folderId),
+    files,
+    user.id,
+  );
 
   if (!updatedFolder?.id) {
     return new Response(JSON.stringify({ error: "Error creating folder." }), {

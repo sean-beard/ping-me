@@ -9,10 +9,11 @@ export class PrismaFileRepository implements FileRepository {
     this.client = new PrismaClient();
   }
 
-  async getFiles(): Promise<File[] | null> {
+  async getFiles(userId: number): Promise<File[] | null> {
     try {
       const files = await this.client.file.findMany({
         select: { id: true, name: true, html: true, userId: true },
+        where: { userId },
         orderBy: { id: "desc" },
       });
 

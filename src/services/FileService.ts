@@ -8,20 +8,30 @@ export class FileService {
     this.fileRepository = fileRepository;
   }
 
-  async getFiles(): Promise<File[] | null> {
-    const files = await this.fileRepository.getFiles();
+  async getFiles(userId: number): Promise<File[] | null> {
+    const files = await this.fileRepository.getFiles(userId);
 
     return files;
   }
 
-  async getFile(id: number): Promise<File | null> {
-    const file = await this.fileRepository.getFile(id);
+  async getFile(fileId: number, userId: number): Promise<File | null> {
+    const file = await this.fileRepository.getFile(fileId);
+
+    if (file?.userId !== userId) {
+      console.log(
+        `User ${userId} does not have access to file with ID: ${fileId}`,
+      );
+      return null;
+    }
 
     return file;
   }
 
-  async createFile(file: Omit<File, "id" | "userId">): Promise<File | null> {
-    const newFile = await this.fileRepository.createFile(file);
+  async createFile(
+    file: Omit<File, "id" | "userId">,
+    userId: number,
+  ): Promise<File | null> {
+    const newFile = await this.fileRepository.createFile(file, userId);
 
     return newFile;
   }
@@ -37,4 +47,30 @@ export class FileService {
 
     return deletedFileId;
   }
+
+  // private async hasAccessToFile(
+  //   fileId: number,
+  //   userId: number,
+  // ): Promise<boolean> {
+  //   try {
+  //     const file = await this.getFile(fileId, userId);
+
+  //     if (!file) {
+  //       console.log(`File with ID: ${fileId} cannot be found`);
+  //       return false;
+  //     }
+
+  //     if (file?.userId !== userId) {
+  //       console.log(
+  //         `User ${userId} does not have access to file with ID: ${fileId}`,
+  //       );
+  //       return false;
+  //     }
+
+  //     return true;
+  //   } catch {
+  //     console.error("Error finding file with ID: " + fileId);
+  //     return false;
+  //   }
+  // }
 }

@@ -1,8 +1,16 @@
 import type { APIRoute } from "astro";
 
 import { folderService } from "@/services";
+import { isAuthenticated } from "@/utils/auth";
 
-export const del: APIRoute = async ({ params }) => {
+export const del: APIRoute = async ({ params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const folderId = params.folderId;
   const fileId = params.fileId;
 

@@ -1,8 +1,16 @@
 import type { APIRoute } from "astro";
 
 import { fileService } from "@/services";
+import { getUser, isAuthenticated } from "@/utils/auth";
 
-export const get: APIRoute = async ({ params }) => {
+export const get: APIRoute = async ({ params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const fileId = params.fileId;
 
   if (!fileId || isNaN(Number(fileId))) {
@@ -11,7 +19,15 @@ export const get: APIRoute = async ({ params }) => {
     });
   }
 
-  const file = await fileService.getFile(Number(fileId));
+  const user = getUser(cookies);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found" }), {
+      status: 404,
+    });
+  }
+
+  const file = await fileService.getFile(Number(fileId), user.id);
 
   if (!file) {
     return new Response(JSON.stringify({ error: "File not found" }), {
@@ -42,7 +58,14 @@ export const get: APIRoute = async ({ params }) => {
   return new Response(response, { status: 200 });
 };
 
-export const put: APIRoute = async ({ request, params }) => {
+export const put: APIRoute = async ({ request, params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const fileId = params.fileId;
 
   if (!fileId || isNaN(Number(fileId))) {

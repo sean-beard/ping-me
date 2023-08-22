@@ -3,15 +3,26 @@ import FileList from "@/components/FileList.astro";
 import FolderList from "@/components/FolderList.astro";
 import Layout from "@/layouts/Layout.astro";
 import { fileService, folderService } from "@/services";
+import { getUser, isAuthenticated } from "@/utils/auth";
 
-const folders = await folderService.getFolders();
+let folders = null;
+let files = null;
 
-const files = await fileService.getFiles();
+const userIsAuthenticated = isAuthenticated(Astro.cookies);
+
+if (userIsAuthenticated) {
+  const user = getUser(Astro.cookies);
+
+  if (user) {
+    folders = await folderService.getFolders(user.id);
+    files = await fileService.getFiles(user.id);
+  }
+}
 ---
 
 <Layout title="Home | PingMe">
 	<main>
-		<h2>Sign up</h2>
+		{!userIsAuthenticated && <h2>Sign up</h2>
 
 		<form hx-post="/sign-up.json" hx-target="this" hx-swap="outerHTML" method="POST">
 			<label for="username">Username</label>
@@ -33,17 +44,17 @@ const files = await fileService.getFiles();
 			<input type="password" name="password" id="password" />
 
 			<button type="submit">Login</button>
-		</form>
+		</form>}
 
-		{folders && <FolderList folders={folders} />}
+		{userIsAuthenticated && folders && <FolderList folders={folders} />}
 
-		<section>
+		{userIsAuthenticated && <section>
 			<h2>Files</h2>
 
 			<a href="/file/new">Create File</a>
 
 			{files && <FileList files={files} />}
-		</section>
+		</section>}
 	</main>
 </Layout>
 
