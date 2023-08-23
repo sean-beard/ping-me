@@ -1,11 +1,19 @@
 import type { APIRoute } from "astro";
 
-import { fileService, folderService } from "../services";
+import { folderService } from "../services";
 // @ts-ignore
 import CreateFolderButtonSuccess from "./create-folder-button-success.html";
 import { FolderRow } from "../components/FolderRow";
+import { getUser, isAuthenticated } from "@/utils/auth";
 
-export const post: APIRoute = async ({ request }) => {
+export const post: APIRoute = async ({ request, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const body = await request.formData();
 
   const folderName = body.get("folderName");
@@ -16,7 +24,18 @@ export const post: APIRoute = async ({ request }) => {
     });
   }
 
-  const createdFolder = await folderService.createFolder(folderName.toString());
+  const user = getUser(cookies);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found." }), {
+      status: 404,
+    });
+  }
+
+  const createdFolder = await folderService.createFolder(
+    folderName.toString(),
+    user.id,
+  );
 
   const folderId = createdFolder?.id;
 

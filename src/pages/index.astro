@@ -3,56 +3,87 @@ import FileList from "@/components/FileList.astro";
 import FolderList from "@/components/FolderList.astro";
 import Layout from "@/layouts/Layout.astro";
 import { fileService, folderService } from "@/services";
+import { getUser, isAuthenticated } from "@/utils/auth";
 
-const folders = await folderService.getFolders();
+let folders = null;
+let files = null;
 
-const files = await fileService.getFiles();
+const userIsAuthenticated = isAuthenticated(Astro.cookies);
+
+if (userIsAuthenticated) {
+  const user = getUser(Astro.cookies);
+
+  if (user) {
+    folders = await folderService.getFolders(user.id);
+    files = await fileService.getFiles(user.id);
+  }
+}
 ---
 
 <Layout title="Home | PingMe">
-	<main>
-		<h2>Sign up</h2>
+  <main>
+    {
+      !userIsAuthenticated && (
+        <div>
+          <h2>Sign up</h2>
 
-		<form hx-post="/sign-up.json" hx-target="this" hx-swap="outerHTML" method="POST">
-			<label for="username">Username</label>
-			<input type="text" name="username" id="username" />
+          <form
+            hx-post="/sign-up.json"
+            hx-target="this"
+            hx-swap="outerHTML"
+            method="POST"
+          >
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" />
 
-			<label for="password">Password</label>
-			<input type="password" name="password" id="password" />
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" />
 
-			<button type="submit">Sign up</button>
-		</form>
+            <button type="submit">Sign up</button>
+          </form>
 
-		<h2>Login</h2>
+          <h2>Login</h2>
 
-		<form hx-post="/login.json" hx-target="this" hx-swap="outerHTML" method="POST">
-			<label for="username">Username</label>
-			<input type="text" name="username" id="username" />
+          <form
+            hx-post="/login.json"
+            hx-target="this"
+            hx-swap="outerHTML"
+            method="POST"
+          >
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" />
 
-			<label for="password">Password</label>
-			<input type="password" name="password" id="password" />
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" />
 
-			<button type="submit">Login</button>
-		</form>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+      )
+    }
 
-		{folders && <FolderList folders={folders} />}
+    {userIsAuthenticated && folders && <FolderList folders={folders} />}
 
-		<section>
-			<h2>Files</h2>
+    {
+      userIsAuthenticated && (
+        <section>
+          <h2>Files</h2>
 
-			<a href="/file/new">Create File</a>
+          <a href="/file/new">Create File</a>
 
-			{files && <FileList files={files} />}
-		</section>
-	</main>
+          {files && <FileList files={files} />}
+        </section>
+      )
+    }
+  </main>
 </Layout>
 
 <style>
-	main {
-		padding: 1.5rem;
-	}
+  main {
+    padding: 1.5rem;
+  }
 
-	li {
-		margin-bottom: 1rem;
-	}
+  li {
+    margin-bottom: 1rem;
+  }
 </style>

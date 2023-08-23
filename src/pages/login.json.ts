@@ -1,8 +1,11 @@
+import jwt from "jsonwebtoken";
 import type { APIRoute } from "astro";
 
 import { userService } from "@/services";
 
-export const post: APIRoute = async ({ request }) => {
+const JWT_OPTIONS: jwt.SignOptions = { expiresIn: "7d" };
+
+export const post: APIRoute = async ({ request, cookies }) => {
   const body = await request.formData();
 
   const username = body.get("username")?.toString();
@@ -26,8 +29,14 @@ export const post: APIRoute = async ({ request }) => {
       });
     }
 
-    // TODO: render form with success message
-    return new Response(JSON.stringify(user), { status: 200 });
+    // TODO: add this env var
+    const userJwt = jwt.sign(user, import.meta.env.SECRET_JWT_KEY, JWT_OPTIONS);
+    cookies.set("ping-me-user", userJwt, { path: "/" });
+
+    return new Response(JSON.stringify(user), {
+      status: 200,
+      headers: { ["HX-Refresh"]: "true" },
+    });
   } catch (error) {
     const genericErrorMessage = "Error logging in.";
 

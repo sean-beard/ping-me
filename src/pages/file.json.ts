@@ -1,8 +1,16 @@
 import type { APIRoute } from "astro";
 
 import { fileService } from "@/services";
+import { getUser, isAuthenticated } from "@/utils/auth";
 
-export const post: APIRoute = async ({ request }) => {
+export const post: APIRoute = async ({ request, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
   const body = await request.formData();
 
   const fileName = body.get("fileName");
@@ -22,7 +30,15 @@ export const post: APIRoute = async ({ request }) => {
     html: fileBody.toString(),
   };
 
-  const createdFile = await fileService.createFile(file);
+  const user = getUser(cookies);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found." }), {
+      status: 404,
+    });
+  }
+
+  const createdFile = await fileService.createFile(file, user.id);
 
   const fileId = createdFile?.id;
 

@@ -2,52 +2,66 @@
 import FileList from "@/components/FileList.astro";
 import Layout from "@/layouts/Layout.astro";
 import { folderService } from "@/services";
+import type { File } from "@/services/types";
+import { getUser } from "@/utils/auth";
 
 const { folderId } = Astro.params;
 
 const folderIdNum = Number(folderId);
 
-const folder =
-    folderIdNum && !Number.isNaN(folderIdNum)
-        ? await folderService.getFolder(folderIdNum)
-        : null;
+const user = getUser(Astro.cookies);
 
-const files = folder ? await folderService.getFiles(folder.id) : [];
+if (!user) {
+  return;
+}
+
+let folder = null;
+let files: File[] | null = [];
+
+if (!folderIdNum || Number.isNaN(folderIdNum)) {
+  return;
+}
+
+const data = await Promise.all([
+  folderService.getFolder(folderIdNum, user.id),
+  folderService.getFiles(folderIdNum, user.id),
+]);
+
+folder = data[0];
+files = data[1];
 ---
 
 <Layout title="Folder | PingMe">
-    <main>
-        {!folder && <h2>Folder not found</h2>}
+  <main>
+    {!folder && <h2>Folder not found</h2>}
 
-        {
-            folder && (
-                <>
-                    <h2>{folder.name}</h2>
+    {
+      folder && (
+        <>
+          <h2>{folder.name}</h2>
 
-                    <button
-                        hx-get={`/folder/${folder.id}/file/random.json`}
-                        hx-target="main"
-                        hx-swap="beforeend"
-                    >
-                        Get random file
-                    </button>
+          <button
+            hx-get={`/folder/${folder.id}/file/random.json`}
+            hx-target="main"
+            hx-swap="beforeend"
+          >
+            Get random file
+          </button>
 
-                    <section>
-                        <h3>Files</h3>
+          <section>
+            <h3>Files</h3>
 
-                        {!!files?.length && (
-                            <FileList files={files} folderId={folder.id} />
-                        )}
-                    </section>
+            {!!files?.length && <FileList files={files} folderId={folder.id} />}
+          </section>
 
-                    <button
-                        hx-patch={`/folder/${folder.id}/edit.json`}
-                        hx-swap="outerHTML"
-                    >
-                        Add files to folder
-                    </button>
-                </>
-            )
-        }
-    </main>
+          <button
+            hx-patch={`/folder/${folder.id}/edit.json`}
+            hx-swap="outerHTML"
+          >
+            Add files to folder
+          </button>
+        </>
+      )
+    }
+  </main>
 </Layout>

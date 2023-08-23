@@ -1,6 +1,7 @@
 {
   "extends": [
-    "prettier"
+    "prettier",
+    "plugin:astro/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -8,7 +9,8 @@
     "sourceType": "module",
     "project": [
       "./tsconfig.json"
-    ]
+    ],
+    "extraFileExtensions": [".html"]
   },
   "plugins": [
     "prettier",
@@ -17,5 +19,15 @@
   "rules": {
     "prettier/prettier": "error"
   },
-  "ignorePatterns": []
+  "overrides": [
+    {
+      "files": ["*.astro"],
+      "parser": "astro-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "extraFileExtensions": [".astro"]
+      },
+      "rules": {}
+    }
+  ]
 }
