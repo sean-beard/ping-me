@@ -12,14 +12,16 @@ const folderIdNum = Number(folderId);
 const user = getUser(Astro.cookies);
 
 if (!user) {
-  return;
+  console.error("User not found");
+  return Astro.redirect("/");
 }
 
 let folder = null;
 let files: File[] | null = [];
 
 if (!folderIdNum || Number.isNaN(folderIdNum)) {
-  return;
+  console.error("Invalid folder ID");
+  return Astro.redirect("/");
 }
 
 const data = await Promise.all([

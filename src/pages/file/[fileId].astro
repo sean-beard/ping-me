@@ -2,6 +2,7 @@
 import { getUser } from "@/utils/auth";
 import Layout from "../../layouts/Layout.astro";
 import { fileService } from "../../services";
+
 const { fileId } = Astro.params;
 
 const fileIdNum = Number(fileId);
@@ -9,8 +10,8 @@ const fileIdNum = Number(fileId);
 const user = getUser(Astro.cookies);
 
 if (!user) {
-  // Astro.redirect("/login");
-  return;
+  console.error("User not found");
+  return Astro.redirect("/");
 }
 
 const file =
