@@ -14,10 +14,15 @@ if (!user) {
   return Astro.redirect("/");
 }
 
-const file =
-  fileIdNum && !Number.isNaN(fileIdNum)
-    ? await fileService.getFile(fileIdNum, user.id)
-    : null;
+let file = null;
+
+try {
+  if (fileIdNum && !Number.isNaN(fileIdNum)) {
+    file = await fileService.getFile(fileIdNum, user.id);
+  }
+} catch {
+  console.error("Error finding file with ID: " + fileIdNum);
+}
 ---
 
 <Layout title="File | PingMe">
