@@ -16,6 +16,15 @@ const { files, folderId } = Astro.props;
         <a href={`/file/${file.id}`}>{file.name}</a>
 
         <button
+          hx-get={`/move/file/${file.id}`}
+          hx-target="#modal-container"
+          hx-swap="innerHTML"
+        >
+          Move
+        </button>
+        <div id="modal-container" />
+
+        <button
           hx-delete={
             folderId
               ? `/folder/${folderId}/file/${file.id}.json`

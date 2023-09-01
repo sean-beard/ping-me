@@ -13,6 +13,6 @@ export const post: APIRoute = async ({ cookies }) => {
 
   return new Response(null, {
     status: 201,
-    headers: { ["HX-Refresh"]: "true" },
+    headers: { ["HX-Redirect"]: "/" },
   });
 };
