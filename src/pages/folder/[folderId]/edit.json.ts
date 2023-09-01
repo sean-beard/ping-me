@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 
 import { getUser, isAuthenticated } from "@/utils/auth";
-import { fileService, folderService } from "../../../services";
+import { folderService } from "../../../services";
 import { FolderRow } from "../../../components/FolderRow";
 
 export const get: APIRoute = async ({ params, cookies }) => {
@@ -96,51 +96,4 @@ export const put: APIRoute = async ({ request, params, cookies }) => {
   const response = FolderRow({ folder });
 
   return new Response(response, { status: 200 });
-};
-
-export const patch: APIRoute = async ({ params, cookies }) => {
-  if (!isAuthenticated(cookies)) {
-    return new Response(null, {
-      status: 400,
-      statusText: "Invalid Authorization header.",
-    });
-  }
-
-  const folderId = params.folderId;
-
-  if (!folderId || isNaN(Number(folderId))) {
-    return new Response(JSON.stringify({ error: "Folder ID is required" }), {
-      status: 400,
-    });
-  }
-
-  const user = getUser(cookies);
-
-  if (!user) {
-    return new Response(JSON.stringify({ error: "User not found." }), {
-      status: 404,
-    });
-  }
-
-  const files = await fileService.getFiles(user.id);
-
-  if (!files) {
-    return new Response(JSON.stringify({ error: "Error getting files." }), {
-      status: 500,
-    });
-  }
-
-  const updatedFolder = await folderService.addFiles(
-    Number(folderId),
-    files,
-    user.id,
-  );
-
-  if (!updatedFolder?.id) {
-    return new Response(JSON.stringify({ error: "Error creating folder." }), {
-      status: 500,
-    });
-  }
-
-  return new Response("<h2>Successfully updated</h2>", { status: 200 });
 };
