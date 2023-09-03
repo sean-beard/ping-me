@@ -1,8 +1,9 @@
 ---
 import FileList from "@/components/FileList.astro";
+import NotificationPreferenceForm from "@/components/NotificationPreferenceForm.astro";
 import Layout from "@/layouts/Layout.astro";
 import { folderService } from "@/services";
-import type { File } from "@/services/types";
+import type { File, Folder } from "@/services/types";
 import { getUser } from "@/utils/auth";
 
 const { folderId } = Astro.params;
@@ -16,7 +17,7 @@ if (!user) {
   return Astro.redirect("/");
 }
 
-let folder = null;
+let folder: Folder | null = null;
 let files: File[] | null = [];
 
 if (!folderIdNum || Number.isNaN(folderIdNum)) {
@@ -31,6 +32,12 @@ const data = await Promise.all([
 
 folder = data[0];
 files = data[1];
+
+const notification = await folderService.getNotificationPreference(
+  folderIdNum,
+  user.id,
+);
+const notificationPreference = notification?.notificationPreference;
 ---
 
 <Layout title="Folder | PingMe">
@@ -42,8 +49,15 @@ files = data[1];
         <>
           <h2>{folder.name}</h2>
 
+          <h3>Settings</h3>
+
+          <NotificationPreferenceForm
+            folder={folder}
+            notificationPreference={notificationPreference}
+          />
+
           <button
-            hx-get={`/folder/${folder.id}/file/random.json`}
+            hx-get={`/folder/${folder?.id}/file/random.json`}
             hx-target="main"
             hx-swap="beforeend"
           >
@@ -53,7 +67,9 @@ files = data[1];
           <section>
             <h3>Files</h3>
 
-            {!!files?.length && <FileList files={files} folderId={folder.id} />}
+            {!!files?.length && (
+              <FileList files={files} folderId={folder?.id} />
+            )}
           </section>
         </>
       )

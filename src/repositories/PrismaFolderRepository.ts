@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import type { FolderRepository } from "./types";
-import type { File, Folder } from "../services/types";
+import type { File, Folder, Notification } from "../services/types";
 
 export class PrismaFolderRepository implements FolderRepository {
   private client: PrismaClient;
@@ -145,6 +145,66 @@ export class PrismaFolderRepository implements FolderRepository {
       return updatedFolder;
     } catch {
       console.error("Error deleting files with IDs: " + fileIds);
+      return null;
+    }
+  }
+
+  async getNotificationPreference(
+    folderId: number,
+    userId: number,
+  ): Promise<Notification | null> {
+    try {
+      const notification = await this.client.notificationPreference.findUnique({
+        where: { userId_folderId: { userId, folderId } },
+        select: { schedule: true },
+      });
+
+      switch (notification?.schedule) {
+        case "0 0 0 * * *":
+          return { notificationPreference: "daily" };
+        case "0 0 0 * * 0":
+          return { notificationPreference: "weekly" };
+        default:
+          return { notificationPreference: "never" };
+      }
+    } catch {
+      console.error(
+        `Error getting notification preference for user ${userId} and folder ${folderId}`,
+      );
+      return null;
+    }
+  }
+
+  async upsertNotificationPreference(
+    userId: number,
+    folderId: number,
+    notificationPreference: string | null,
+  ): Promise<Notification | null> {
+    try {
+      await this.client.notificationPreference.upsert({
+        where: { userId_folderId: { userId, folderId } },
+        create: {
+          schedule: notificationPreference,
+          user: { connect: { id: userId } },
+          folder: { connect: { id: folderId } },
+        },
+        update: {
+          schedule: notificationPreference,
+        },
+      });
+
+      switch (notificationPreference) {
+        case "0 0 0 * * *":
+          return { notificationPreference: "daily" };
+        case "0 0 0 * * 0":
+          return { notificationPreference: "weekly" };
+        default:
+          return { notificationPreference: "never" };
+      }
+    } catch {
+      console.error(
+        `Error upserting notification preference for user ${userId} and folder ${folderId}`,
+      );
       return null;
     }
   }

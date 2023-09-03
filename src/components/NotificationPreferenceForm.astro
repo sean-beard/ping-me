@@ -1,0 +1,38 @@
+---
+const { folder, notificationPreference } = Astro.props;
+---
+
+<form
+  hx-post={`/folder/${folder.id}/edit.json`}
+  hx-target="this"
+  hx-swap="outerHTML"
+>
+  <input
+    id="daily-radio"
+    type="radio"
+    name="notificationPreference"
+    checked={notificationPreference === "daily"}
+    value="daily"
+  />
+  <label for="daily-radio">daily</label>
+
+  <input
+    id="weekly-radio"
+    type="radio"
+    name="notificationPreference"
+    checked={notificationPreference === "weekly"}
+    value="weekly"
+  />
+  <label for="weekly-radio">weekly</label>
+
+  <input
+    id="never-radio"
+    type="radio"
+    name="notificationPreference"
+    checked={notificationPreference === "never"}
+    value="never"
+  />
+  <label for="never-radio">never</label>
+
+  <button type="submit">Update</button>
+</form>
