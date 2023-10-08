@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import type { FileRepository } from "./types";
 import type { File } from "../services/types";
 
 export class PrismaFileRepository implements FileRepository {
   private client: PrismaClient;
 
-  constructor() {
-    this.client = new PrismaClient();
+  constructor(client: PrismaClient) {
+    this.client = client;
   }
 
   async getFiles(userId: number): Promise<File[] | null> {

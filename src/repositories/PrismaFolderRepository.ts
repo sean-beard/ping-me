@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import type { FolderRepository } from "./types";
 import type { File, Folder, Notification } from "../services/types";
 
 export class PrismaFolderRepository implements FolderRepository {
   private client: PrismaClient;
 
-  constructor() {
-    this.client = new PrismaClient();
+  constructor(client: PrismaClient) {
+    this.client = client;
   }
 
   async getFolders(userId: number): Promise<Folder[] | null> {
