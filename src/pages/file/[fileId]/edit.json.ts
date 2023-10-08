@@ -36,7 +36,7 @@ export const get: APIRoute = async ({ params, cookies }) => {
   }
 
   const response = `
-    <form hx-put="/file/${file.id}/edit.json">
+    <form hx-put="/file/${file.id}/update">
         <label for="file-name">File name</label>
         <br />
         <input type="text" id="file-name" name="fileName" value="${file.name}" />
