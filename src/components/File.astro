@@ -1,0 +1,37 @@
+---
+import type { File } from "@/services/types";
+
+interface Props {
+  file: File;
+}
+
+const { file } = Astro.props;
+---
+
+<div id="file">
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%",
+    }}
+  >
+    <h2>{file.name}</h2>
+
+    <button
+      hx-get={`/file/${file.id}/edit`}
+      hx-swap="outerHTML"
+      hx-target="#file"
+      style={{
+        width: "100px",
+        height: "50px",
+        cursor: "pointer",
+      }}
+    >
+      Edit
+    </button>
+  </div>
+
+  <div set:html={file.html} />
+</div>

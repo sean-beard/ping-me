@@ -1,0 +1,40 @@
+---
+import FileEdit from "@/components/FileEdit.astro";
+import { fileService } from "@/services";
+import { getUser, isAuthenticated } from "@/utils/auth";
+
+const cookies = Astro.cookies;
+
+if (!isAuthenticated(cookies)) {
+  return new Response(null, {
+    status: 400,
+    statusText: "Invalid Authorization header.",
+  });
+}
+
+const fileId = Astro.params.fileId;
+
+if (!fileId || isNaN(Number(fileId))) {
+  return new Response(JSON.stringify({ error: "Folder ID is required" }), {
+    status: 400,
+  });
+}
+
+const user = getUser(cookies);
+
+if (!user) {
+  return new Response(JSON.stringify({ error: "User not found" }), {
+    status: 404,
+  });
+}
+
+const file = await fileService.getFile(Number(fileId), user.id);
+
+if (!file) {
+  return new Response(JSON.stringify({ error: "File not found" }), {
+    status: 404,
+  });
+}
+---
+
+<FileEdit file={file} />
