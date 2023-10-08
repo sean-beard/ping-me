@@ -21,61 +21,59 @@ if (userIsAuthenticated) {
 ---
 
 <Layout title="Home | PingMe">
-  <main>
-    {
-      !userIsAuthenticated && (
-        <div>
-          <h2>Sign up</h2>
+  {
+    !userIsAuthenticated && (
+      <div>
+        <h2>Sign up</h2>
 
-          <form
-            hx-post="/sign-up.json"
-            hx-target="this"
-            hx-swap="outerHTML"
-            method="POST"
-          >
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username" />
+        <form
+          hx-post="/sign-up.json"
+          hx-target="this"
+          hx-swap="outerHTML"
+          method="POST"
+        >
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" />
 
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" />
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" />
 
-            <button type="submit">Sign up</button>
-          </form>
+          <button type="submit">Sign up</button>
+        </form>
 
-          <h2>Login</h2>
+        <h2>Login</h2>
 
-          <form
-            hx-post="/login.json"
-            hx-target="this"
-            hx-swap="outerHTML"
-            method="POST"
-          >
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username" />
+        <form
+          hx-post="/login.json"
+          hx-target="this"
+          hx-swap="outerHTML"
+          method="POST"
+        >
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" />
 
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" />
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" />
 
-            <button type="submit">Login</button>
-          </form>
-        </div>
-      )
-    }
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    )
+  }
 
-    {userIsAuthenticated && folders && <FolderList folders={folders} />}
+  {userIsAuthenticated && folders && <FolderList folders={folders} />}
 
-    {
-      userIsAuthenticated && (
-        <section>
-          <h2>Files</h2>
+  {
+    userIsAuthenticated && (
+      <section>
+        <h2>Files</h2>
 
-          <a href="/file/new">Create File</a>
+        <a href="/file/new">Create File</a>
 
-          {files && <FileList files={files} />}
-        </section>
-      )
-    }
-  </main>
+        {files && <FileList files={files} />}
+      </section>
+    )
+  }
 </Layout>
 
 <style>

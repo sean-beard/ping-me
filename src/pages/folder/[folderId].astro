@@ -41,38 +41,37 @@ const notificationPreference = notification?.notificationPreference;
 ---
 
 <Layout title="Folder | PingMe">
-  <main>
-    {!folder && <h2>Folder not found</h2>}
+  {!folder && <h2>Folder not found</h2>}
 
-    {
-      folder && (
-        <>
-          <h2>{folder.name}</h2>
+  {
+    folder && (
+      <>
+        <h2>{folder.name}</h2>
 
-          <h3>Settings</h3>
+        <h3>Settings</h3>
 
-          <NotificationPreferenceForm
-            folder={folder}
-            notificationPreference={notificationPreference}
-          />
+        <NotificationPreferenceForm
+          folder={folder}
+          notificationPreference={notificationPreference}
+        />
 
+        {!!files?.length && (
           <button
             hx-get={`/folder/${folder?.id}/file/random.json`}
             hx-target="main"
             hx-swap="beforeend"
+            style={{ marginTop: "1rem" }}
           >
             Get random file
           </button>
+        )}
 
-          <section>
-            <h3>Files</h3>
+        <section>
+          <h3>Files</h3>
 
-            {!!files?.length && (
-              <FileList files={files} folderId={folder?.id} />
-            )}
-          </section>
-        </>
-      )
-    }
-  </main>
+          {!!files?.length && <FileList files={files} folderId={folder?.id} />}
+        </section>
+      </>
+    )
+  }
 </Layout>
