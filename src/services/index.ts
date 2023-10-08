@@ -8,10 +8,10 @@ import { UserService } from "./UserService";
 
 const client = new PrismaClient();
 
-const folderRepository = new PrismaFolderRepository();
+const folderRepository = new PrismaFolderRepository(client);
 export const folderService = new FolderService(folderRepository);
 
-const fileRepository = new PrismaFileRepository();
+const fileRepository = new PrismaFileRepository(client);
 export const fileService = new FileService(fileRepository);
 
 const userRepository = new PrismaUserRepository(client);
