@@ -2,7 +2,13 @@ import type { APIRoute } from "astro";
 
 import { getUser, isAuthenticated } from "@/utils/auth";
 import { folderService } from "../../../services";
+import type { FolderNotificationPreference } from "../../../services/types";
 import { FolderRow } from "../../../components/FolderRow";
+
+const isValidNotificationPreference = (
+  pref: string,
+): pref is FolderNotificationPreference =>
+  ["daily", "weekly", "never"].includes(pref.toString());
 
 export const get: APIRoute = async ({ params, cookies }) => {
   if (!isAuthenticated(cookies)) {
@@ -52,6 +58,70 @@ export const get: APIRoute = async ({ params, cookies }) => {
   `;
 
   return new Response(html, { status: 200 });
+};
+
+export const post: APIRoute = async ({ request, params, cookies }) => {
+  if (!isAuthenticated(cookies)) {
+    return new Response(null, {
+      status: 400,
+      statusText: "Invalid Authorization header.",
+    });
+  }
+
+  const user = getUser(cookies);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found." }), {
+      status: 404,
+    });
+  }
+
+  const folderId = params.folderId;
+
+  if (!folderId || isNaN(Number(folderId))) {
+    return new Response(JSON.stringify({ error: "Folder ID is required" }), {
+      status: 400,
+    });
+  }
+
+  const body = await request.formData();
+
+  const notificationPreferenceFormData = body.get("notificationPreference");
+
+  if (!notificationPreferenceFormData) {
+    return new Response(
+      JSON.stringify({ error: "Notification preference is required" }),
+      { status: 400 },
+    );
+  }
+
+  const notificationPreference = notificationPreferenceFormData.toString();
+
+  if (!isValidNotificationPreference(notificationPreference)) {
+    console.log(`Invalid notification preference: ${notificationPreference}`);
+
+    return new Response(
+      JSON.stringify({ error: "Invalid notification preference" }),
+      { status: 400 },
+    );
+  }
+
+  const result = folderService.setNotificationPreference(
+    user.id,
+    Number(folderId),
+    notificationPreference,
+  );
+
+  if (!result) {
+    return new Response(
+      JSON.stringify({ error: "Error updating notification preference" }),
+      { status: 500 },
+    );
+  }
+
+  return new Response("<p>Notification preference updated</p>", {
+    status: 200,
+  });
 };
 
 export const put: APIRoute = async ({ request, params, cookies }) => {

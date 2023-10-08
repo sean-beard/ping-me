@@ -1,5 +1,10 @@
 import type { FolderRepository } from "../repositories/types";
-import type { File, Folder } from "./types";
+import type {
+  File,
+  Folder,
+  FolderNotificationPreference,
+  Notification,
+} from "./types";
 
 export class FolderService {
   private folderRepository: FolderRepository;
@@ -100,6 +105,54 @@ export class FolderService {
     );
 
     return updatedFolder;
+  }
+
+  async getNotificationPreference(
+    folderId: number,
+    userId: number,
+  ): Promise<Notification | null> {
+    const notification = await this.folderRepository.getNotificationPreference(
+      folderId,
+      userId,
+    );
+
+    if (!notification) {
+      console.error(
+        `Error getting notification preference for user ${userId} and folder ${folderId}`,
+      );
+    }
+
+    return notification;
+  }
+
+  async setNotificationPreference(
+    userId: number,
+    folderId: number,
+    notificationPreference: FolderNotificationPreference,
+  ): Promise<Notification | null> {
+    // TODO: test this
+    const preferenceMap: {
+      [key in FolderNotificationPreference]: string | null;
+    } = {
+      daily: "0 0 0 * * *",
+      weekly: "0 0 0 * * 0",
+      never: null,
+    };
+
+    const notification =
+      await this.folderRepository.upsertNotificationPreference(
+        userId,
+        folderId,
+        preferenceMap[notificationPreference],
+      );
+
+    if (!notification) {
+      console.error(
+        `Error upserting notification preference ${notificationPreference} for user ${userId} and folder ${folderId}`,
+      );
+    }
+
+    return notification;
   }
 
   async getRandomFile(folderId: number): Promise<File | null> {

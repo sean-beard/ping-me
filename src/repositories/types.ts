@@ -1,4 +1,4 @@
-import type { Folder, File, User } from "src/services/types";
+import type { Folder, File, Notification, User } from "src/services/types";
 
 export interface FolderRepository {
   getFolders(userId: number): Promise<Folder[] | null>;
@@ -12,6 +12,15 @@ export interface FolderRepository {
   addFiles(folderId: number, files: File[]): Promise<Folder | null>;
   getFiles(folderId: number): Promise<File[] | null>;
   deleteFiles(folderId: number, fileIds: number[]): Promise<Folder | null>;
+  getNotificationPreference(
+    folderId: number,
+    userId: number,
+  ): Promise<Notification | null>;
+  upsertNotificationPreference(
+    folderId: number,
+    userId: number,
+    notificationPreference: string | null,
+  ): Promise<Notification | null>;
 }
 
 export interface FileRepository {
