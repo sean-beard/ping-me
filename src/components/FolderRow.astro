@@ -1,0 +1,63 @@
+---
+interface Props {
+  folderId: number;
+  folderName: string;
+  isEditing?: boolean;
+}
+
+const { folderId, folderName, isEditing } = Astro.props;
+---
+
+{
+  isEditing && (
+    <li
+      hx-trigger="cancel"
+      hx-get={`/folder/${folderId}`}
+      class="edit-folder-row"
+    >
+      <label for="folder-name">Folder name</label>
+      <input
+        type="text"
+        id="folder-name"
+        name="folderName"
+        value={folderName}
+      />
+
+      <button hx-get={`/folder/${folderId}/row`}>Cancel</button>
+
+      <button hx-put={`/folder/${folderId}/update`} hx-include="closest li">
+        Save
+      </button>
+    </li>
+  )
+}
+
+{
+  !isEditing && (
+    <li hx-target="this" hx-swap="outerHTML" class="folder-row">
+      <a href={`/folder/${folderId}`}>{folderName}</a>
+
+      <button class="btn btn-danger" hx-get={`/folder/${folderId}/edit`}>
+        Edit
+      </button>
+    </li>
+  )
+}
+
+<style>
+  .folder-row,
+  .edit-folder-row {
+    display: flex;
+    justify-content: space-between;
+    background-color: #d3e3fd;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    max-width: 320px;
+    list-style: none;
+  }
+
+  .edit-folder-row {
+    max-width: 450px;
+  }
+</style>

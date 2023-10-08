@@ -3,7 +3,7 @@ const { folder, notificationPreference } = Astro.props;
 ---
 
 <form
-  hx-post={`/folder/${folder.id}/edit.json`}
+  hx-post={`/folder/${folder.id}/preference`}
   hx-target="this"
   hx-swap="outerHTML"
 >
