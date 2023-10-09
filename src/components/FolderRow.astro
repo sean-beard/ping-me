@@ -34,12 +34,17 @@ const { folderId, folderName, isEditing } = Astro.props;
 
 {
   !isEditing && (
-    <li hx-target="this" hx-swap="outerHTML" class="folder-row">
+    <li hx-swap="outerHTML" class="folder-row">
       <a href={`/folder/${folderId}`}>{folderName}</a>
 
-      <button class="btn btn-danger" hx-get={`/folder/${folderId}/edit`}>
-        Edit
-      </button>
+      <div>
+        <button hx-target="closest li" hx-get={`/folder/${folderId}/edit`}>
+          Edit
+        </button>
+        <button hx-target="closest ul" hx-delete={`/folder/${folderId}/delete`}>
+          Delete
+        </button>
+      </div>
     </li>
   )
 }
