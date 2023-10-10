@@ -37,12 +37,11 @@ export const post: APIRoute = async ({ params, request, cookies }) => {
     });
   }
 
-  const promises = folderIds.map((folderId) => {
-    return folderService.addFiles(Number(folderId), [file], user.id);
-  });
-
   try {
-    await Promise.all(promises);
+    for (let i = 0; i < folderIds.length; i++) {
+      const folderId = Number(folderIds[i]);
+      await folderService.addFiles(folderId, [file], user.id);
+    }
   } catch {
     // TODO: more granular error handling
     return new Response(JSON.stringify({ error: "Error moving file." }), {
