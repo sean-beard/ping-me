@@ -1,0 +1,26 @@
+---
+import type { File } from "@/services/types";
+interface Props {
+  file: Omit<File, "userId">;
+}
+
+const { file } = Astro.props;
+---
+
+<form hx-put={`/file/${file.id}/update`}>
+  <label for="file-name">File name</label>
+  <br />
+  <input type="text" id="file-name" name="fileName" value={file.name} />
+
+  <br />
+  <br />
+
+  <label for="file-body">Body</label>
+  <br />
+  <textarea id="file-body" name="fileBody">{file.html}</textarea>
+
+  <br />
+  <br />
+
+  <button type="submit">Update</button>
+</form>

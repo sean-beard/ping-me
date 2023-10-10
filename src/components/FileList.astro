@@ -12,28 +12,49 @@ const { files, folderId } = Astro.props;
 <ul id="file-list">
   {
     files.map((file) => (
-      <li>
+      <li class="file-row">
         <a href={`/file/${file.id}`}>{file.name}</a>
 
-        <button
-          hx-get={`/move/file/${file.id}`}
-          hx-target="#modal-container"
-          hx-swap="innerHTML"
-        >
-          Move
-        </button>
-        <div id="modal-container" />
+        <div style={{ display: "flex" }}>
+          <button
+            hx-get={`/move/file/${file.id}`}
+            hx-target="#modal-container"
+            hx-swap="innerHTML"
+          >
+            Move
+          </button>
+          <div id="modal-container" />
 
-        <button
-          hx-delete={
-            folderId
-              ? `/folder/${folderId}/file/${file.id}.json`
-              : `/file/${file.id}/delete.json`
-          }
-        >
-          Delete
-        </button>
+          <button
+            style={{ marginLeft: "0.5rem" }}
+            hx-delete={
+              folderId
+                ? `/folder/${folderId}/file/${file.id}.json`
+                : `/file/${file.id}/delete.json`
+            }
+          >
+            Delete
+          </button>
+        </div>
       </li>
     ))
   }
 </ul>
+
+<style>
+  #file-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .file-row {
+    display: flex;
+    justify-content: space-between;
+    background-color: #d3e3fd;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    max-width: 320px;
+    list-style: none;
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+import File from "@/components/File.astro";
+import { isAuthenticated } from "@/utils/auth";
+import { fileService } from "@/services";
+import FileEdit from "@/components/FileEdit.astro";
+
+let error = "";
+let updatedFile = null;
+
+if (!isAuthenticated(Astro.cookies)) {
+  return new Response(null, {
+    status: 400,
+    statusText: "Invalid Authorization header.",
+  });
+}
+
+const { fileId } = Astro.params;
+
+if (!fileId || isNaN(Number(fileId))) {
+  return new Response(null, {
+    status: 400,
+    statusText: "File ID is required",
+  });
+}
+
+const body = await Astro.request.formData();
+
+const fileName = body.get("fileName");
+const fileBody = body.get("fileBody");
+
+if (!fileName || !fileBody) {
+  return new Response(null, {
+    status: 400,
+    statusText: "File name and body are required",
+  });
+}
+
+const file = {
+  name: fileName!.toString(),
+  html: fileBody!.toString(),
+};
+
+updatedFile = await fileService.updateFile(Number(fileId), file);
+
+if (!updatedFile) {
+  error = "Error updating file with ID: " + fileId;
+}
+---
+
+{
+  error && (
+    <>
+      <h2>{error}</h2>
+
+      <FileEdit
+        file={{
+          id: Number(fileId),
+          name: fileName.toString(),
+          html: fileBody.toString(),
+        }}
+      />
+    </>
+  )
+}
+
+{!error && updatedFile && <File file={updatedFile} />}
