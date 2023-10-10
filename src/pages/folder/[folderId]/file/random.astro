@@ -1,0 +1,24 @@
+---
+import { folderService } from "@/services";
+
+const folderId = Astro.params.folderId;
+
+if (!folderId || isNaN(Number(folderId))) {
+  return new Response(JSON.stringify({ error: "Folder ID is required" }), {
+    status: 400,
+  });
+}
+
+const randomFile = await folderService.getRandomFile(Number(folderId));
+
+if (!randomFile) {
+  return new Response(
+    JSON.stringify({
+      error: "Error getting random file from folder with ID: " + folderId,
+    }),
+    { status: 500 },
+  );
+}
+---
+
+<span>{randomFile.name}</span>

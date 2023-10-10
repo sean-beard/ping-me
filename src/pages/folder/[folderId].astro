@@ -56,14 +56,19 @@ const notificationPreference = notification?.notificationPreference;
         />
 
         {!!files?.length && (
-          <button
-            hx-get={`/folder/${folder?.id}/file/random.json`}
-            hx-target="main"
-            hx-swap="beforeend"
-            style={{ marginTop: "1rem" }}
+          <div
+            style={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
           >
-            Get random file
-          </button>
+            <button
+              hx-get={`/folder/${folder?.id}/file/random`}
+              hx-target="#random-file-name"
+              hx-swap="innerHTML"
+            >
+              Get random file
+            </button>
+
+            <div id="random-file-name" style="margin-left: 1rem;" />
+          </div>
         )}
 
         <section>
