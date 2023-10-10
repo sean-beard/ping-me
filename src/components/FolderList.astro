@@ -1,5 +1,4 @@
 ---
-import CreateFolderButton from "../pages/create-folder-button.html";
 import type { Folder } from "../services/types";
 import FolderRow from "./FolderRow.astro";
 
@@ -10,19 +9,13 @@ interface Props {
 const { folders } = Astro.props;
 ---
 
-<section>
-  <h2>Folders</h2>
-
-  <CreateFolderButton />
-
-  <ul id="folder-list" hx-target="closest li" hx-swap="outerHTML">
-    {
-      (folders || []).map((folder) => {
-        return <FolderRow folderId={folder.id} folderName={folder.name} />;
-      })
-    }
-  </ul>
-</section>
+<ul id="folder-list" hx-target="closest li" hx-swap="outerHTML">
+  {
+    (folders || []).map((folder) => {
+      return <FolderRow folderId={folder.id} folderName={folder.name} />;
+    })
+  }
+</ul>
 
 <style>
   #folder-list {

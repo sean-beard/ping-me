@@ -1,0 +1,43 @@
+---
+import FolderList from "@/components/FolderList.astro";
+import { folderService } from "@/services";
+import { getUser, isAuthenticated } from "@/utils/auth";
+
+if (!isAuthenticated(Astro.cookies)) {
+  return new Response(null, {
+    status: 400,
+    statusText: "Invalid Authorization header.",
+  });
+}
+
+const user = getUser(Astro.cookies);
+
+if (!user) {
+  console.error("User not found");
+  return Astro.redirect("/");
+}
+
+const folderId = Astro.params.folderId;
+
+if (!folderId || isNaN(Number(folderId))) {
+  return new Response(JSON.stringify({ error: "File ID is required" }), {
+    status: 400,
+  });
+}
+
+const deletedFolderId = await folderService.deleteFolder(
+  Number(folderId),
+  user.id,
+);
+
+if (!deletedFolderId) {
+  return new Response(
+    JSON.stringify({ error: "Error deleting folder with ID: " + folderId }),
+    { status: 500 },
+  );
+}
+
+const folders = await folderService.getFolders(user.id);
+---
+
+<FolderList folders={folders ?? []} />

@@ -61,7 +61,19 @@ if (userIsAuthenticated) {
     )
   }
 
-  {userIsAuthenticated && folders && <FolderList folders={folders} />}
+  {
+    userIsAuthenticated && folders && (
+      <section>
+        <h2>Folders</h2>
+
+        <div hx-target="this" hx-swap="outerHTML">
+          <button hx-get="/create-folder">Add folder</button>
+        </div>
+
+        <FolderList folders={folders} />
+      </section>
+    )
+  }
 
   {
     userIsAuthenticated && (

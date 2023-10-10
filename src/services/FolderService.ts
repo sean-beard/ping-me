@@ -95,6 +95,22 @@ export class FolderService {
     return files;
   }
 
+  async deleteFolder(folderId: number, userId: number): Promise<number | null> {
+    const isFolderOwnershipValid = await this.isFolderOwnershipValid(
+      folderId,
+      userId,
+    );
+
+    if (!isFolderOwnershipValid) {
+      console.log(`User ${userId} does not own folder with ID: ${folderId}`);
+      return null;
+    }
+
+    const deletedFolderId = await this.folderRepository.deleteFolder(folderId);
+
+    return deletedFolderId;
+  }
+
   async deleteFiles(
     folderId: number,
     fileIds: number[],
