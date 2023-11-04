@@ -1,5 +1,6 @@
 ---
 import type { File } from "@/services/types";
+
 interface Props {
   file: Omit<File, "userId">;
 }
@@ -17,11 +18,11 @@ const { file } = Astro.props;
 
   <label for="file-body">Body</label>
   <br />
-  <textarea
-    id="file-body"
-    name="fileBody"
-    style={{ width: "550px", height: "250px" }}>{file.html}</textarea
-  >
+
+  <div id="editor"></div>
+  <input type="hidden" id="file-body" name="fileBody" value={file.html} />
+
+  <file-editor data-file={file.html}></file-editor>
 
   <br />
   <br />

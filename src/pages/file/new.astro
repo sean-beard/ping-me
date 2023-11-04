@@ -1,8 +1,8 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import FileLayout from "@/layouts/FileLayout.astro";
 ---
 
-<Layout title="New File | PingMe">
+<FileLayout title="New File | PingMe">
   <form hx-post="/file.json">
     <label for="file-name">File name</label>
     <br />
@@ -12,15 +12,13 @@ import Layout from "@/layouts/Layout.astro";
     <br />
 
     <label for="file-body">Body</label>
-    <br />
-    <textarea
-      id="file-body"
-      name="fileBody"
-      style={{ width: "550px", height: "250px" }}></textarea>
+    <file-editor></file-editor>
+    <div id="editor"></div>
+    <input type="hidden" id="file-body" name="fileBody" />
 
     <br />
     <br />
 
     <button type="submit">Create</button>
   </form>
-</Layout>
+</FileLayout>

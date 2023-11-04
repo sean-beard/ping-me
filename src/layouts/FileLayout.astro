@@ -1,0 +1,48 @@
+---
+import Layout from "./Layout.astro";
+
+const props = Astro.props;
+---
+
+<script>
+  import Editor from "@toast-ui/editor";
+  import "@toast-ui/editor/dist/toastui-editor.css";
+
+  class FileEditor extends HTMLElement {
+    constructor() {
+      super();
+
+      const body = this.dataset.file;
+
+      const editorElement: HTMLElement | null =
+        document.querySelector("#editor");
+
+      if (editorElement) {
+        const editor = new Editor({
+          el: editorElement,
+          height: "500px",
+          initialEditType: "wysiwyg",
+          previewStyle: "vertical",
+          initialValue: body,
+        });
+
+        editor.on("change", () => {
+          const updatedBody = editor.getHTML();
+          const fileBody = document.querySelector("#file-body");
+
+          if (fileBody) {
+            fileBody.setAttribute("value", updatedBody);
+          }
+        });
+      } else {
+        throw new Error("Editor element not found");
+      }
+    }
+  }
+
+  customElements.define("file-editor", FileEditor);
+</script>
+
+<Layout {...props}>
+  <slot />
+</Layout>

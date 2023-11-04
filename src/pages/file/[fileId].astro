@@ -1,7 +1,7 @@
 ---
 import { getUser } from "@/utils/auth";
 import File from "@/components/File.astro";
-import Layout from "../../layouts/Layout.astro";
+import FileLayout from "@/layouts/FileLayout.astro";
 import { fileService } from "../../services";
 
 const { fileId } = Astro.params;
@@ -26,11 +26,11 @@ try {
 }
 ---
 
-<Layout title="File | PingMe">
+<FileLayout title="File | PingMe">
   {!file && <h2>File not found</h2>}
 
   {file && <File file={file} />}
-</Layout>
+</FileLayout>
 
 <style>
   h2 {
