@@ -27,6 +27,12 @@ try {
 document.getElementById(closeButtonId).onclick = () => {
     document.getElementById(modalId).style.display = "none";
 };
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    document.getElementById(modalId).style.display = "none";
+  }
+});
 </script>
 
 <div id={modalId} class="modal">
