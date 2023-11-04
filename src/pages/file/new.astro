@@ -1,8 +1,26 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import CreateFileForm from "@/pages/create-file.html";
 ---
 
 <Layout title="New File | PingMe">
-  <CreateFileForm />
+  <form hx-post="/file.json">
+    <label for="file-name">File name</label>
+    <br />
+    <input type="text" id="file-name" name="fileName" />
+
+    <br />
+    <br />
+
+    <label for="file-body">Body</label>
+    <br />
+    <textarea
+      id="file-body"
+      name="fileBody"
+      style={{ width: "550px", height: "250px" }}></textarea>
+
+    <br />
+    <br />
+
+    <button type="submit">Create</button>
+  </form>
 </Layout>

@@ -25,32 +25,45 @@ try {
 
 <script define:vars={{ modalId, closeButtonId }}>
 document.getElementById(closeButtonId).onclick = () => {
-    document.getElementById(modalId).style.display = "none";
+  document.getElementById(modalId).style.display = "none";
 };
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    document.getElementById(modalId).style.display = "none";
+  }
+});
 </script>
 
 <div id={modalId} class="modal">
   <div class="modal-content">
-    <button id={closeButtonId} class="close">&times;</button>
+    <div class="modal-header">
+      <button id={closeButtonId} class="close">&times;</button>
+    </div>
 
     {!folders && <h2>No folders</h2>}
 
     {
       folders && (
         <form hx-post={`/move/file/${fileId}.json`} target={`#${modalId}`}>
-          {folders.map((folder) => (
-            <div>
-              <input
-                type="checkbox"
-                id={folder.id.toString()}
-                name="folderIds"
-                value={folder.id}
-              />
-              <label for={folder.id.toString()}>{folder.name}</label>
-            </div>
-          ))}
+          <div style="margin-bottom: 1rem;">
+            {folders.map((folder) => (
+              <div>
+                <input
+                  class="move-checkbox"
+                  type="checkbox"
+                  id={folder.id.toString()}
+                  name="folderIds"
+                  value={folder.id}
+                />
+                <label for={folder.id.toString()}>{folder.name}</label>
+              </div>
+            ))}
+          </div>
 
-          <button type="submit">Move</button>
+          <button type="submit" class="move-button">
+            Move
+          </button>
         </form>
       )
     }
@@ -71,13 +84,34 @@ document.getElementById(closeButtonId).onclick = () => {
   }
 
   .modal-content {
+    display: flex;
+    flex-direction: column;
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
+    height: 300px;
     width: 80%;
     max-width: 400px;
-    text-align: center;
+    overflow-y: scroll;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  form {
+    margin: 2rem auto;
+  }
+
+  label,
+  .move-checkbox {
+    cursor: pointer;
+  }
+
+  .move-button {
+    float: right;
   }
 
   .close {
