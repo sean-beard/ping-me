@@ -17,7 +17,11 @@ const { file } = Astro.props;
 
   <label for="file-body">Body</label>
   <br />
-  <textarea id="file-body" name="fileBody">{file.html}</textarea>
+  <textarea
+    id="file-body"
+    name="fileBody"
+    style={{ width: "550px", height: "250px" }}>{file.html}</textarea
+  >
 
   <br />
   <br />

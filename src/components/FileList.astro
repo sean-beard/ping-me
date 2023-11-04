@@ -13,7 +13,9 @@ const { files, folderId } = Astro.props;
   {
     files.map((file) => (
       <li class="file-row">
-        <a href={`/file/${file.id}`}>{file.name}</a>
+        <div class="file-name">
+          <a href={`/file/${file.id}`}>{file.name}</a>
+        </div>
 
         <div style={{ display: "flex" }}>
           <button
@@ -56,5 +58,11 @@ const { files, folderId } = Astro.props;
     margin: 1rem 0;
     max-width: 320px;
     list-style: none;
+  }
+
+  .file-name {
+    max-width: 175px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
