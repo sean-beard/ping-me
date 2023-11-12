@@ -1,6 +1,7 @@
 ---
 import FileList from "@/components/FileList.astro";
 import FolderList from "@/components/FolderList.astro";
+import NewFolderButton from "@/components/NewFolderButton.astro";
 import Layout from "@/layouts/Layout.astro";
 import { fileService, folderService } from "@/services";
 import { getUser, isAuthenticated } from "@/utils/auth";
@@ -64,10 +65,12 @@ if (userIsAuthenticated) {
   {
     userIsAuthenticated && folders && (
       <section>
-        <h2>Folders</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>Folders</h2>
 
-        <div hx-target="this" hx-swap="outerHTML">
-          <button hx-get="/create-folder">Add folder</button>
+          <div hx-target="this" hx-swap="outerHTML">
+            <NewFolderButton />
+          </div>
         </div>
 
         <FolderList folders={folders} />

@@ -1,5 +1,6 @@
 ---
 import FolderRow from "@/components/FolderRow.astro";
+import NewFolderButton from "@/components/NewFolderButton.astro";
 import { getUser, isAuthenticated } from "@/utils/auth";
 import { folderService } from "@/services";
 
@@ -49,6 +50,5 @@ if (!folderId) {
 </div>
 
 <div hx-target="this" hx-swap="outerHTML">
-  <h3>Successfully created folder!</h3>
-  <button hx-get="/create-folder">Add folder</button>
+  <NewFolderButton />
 </div>
