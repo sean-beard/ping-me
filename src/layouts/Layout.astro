@@ -55,6 +55,13 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
 </html>
 <style is:global>
   :root {
+    --background: #efe9d9;
+    --shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+    --card-background: #ddd4bc;
+    --section-background: #e6e1d1;
+    --black: #333333;
+    --orange: #ea8958;
+    --yellow: #e1b881;
     --accent: 124, 58, 237;
     --accent-gradient: linear-gradient(
       45deg,
@@ -65,18 +72,26 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
   }
   html {
     font-family: system-ui, sans-serif;
-    background-color: #f6f6f6;
+    background-color: var(--background);
   }
 
   header {
+    background-color: #ede1ca;
+    border-radius: 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 0.5rem 3rem;
+    margin: 2rem 5rem;
+    box-shadow: var(--shadow);
+  }
+
+  header h1 {
+    margin: 0;
   }
 
   main {
-    padding: 1rem;
+    padding: 1rem 2rem;
     padding-top: 0;
   }
 
