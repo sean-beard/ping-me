@@ -5,7 +5,7 @@ import { userService } from "@/services";
 
 const JWT_OPTIONS: jwt.SignOptions = { expiresIn: "7d" };
 
-export const post: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   const body = await request.formData();
 
   const username = body.get("username")?.toString();

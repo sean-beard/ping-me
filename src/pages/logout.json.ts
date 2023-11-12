@@ -1,7 +1,7 @@
 import { isAuthenticated } from "@/utils/auth";
 import type { APIRoute } from "astro";
 
-export const post: APIRoute = async ({ cookies }) => {
+export const POST: APIRoute = async ({ cookies }) => {
   if (!isAuthenticated(cookies)) {
     return new Response(null, {
       status: 400,
