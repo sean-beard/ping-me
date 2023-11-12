@@ -81,9 +81,13 @@ if (userIsAuthenticated) {
   {
     userIsAuthenticated && (
       <section>
-        <h2>Files</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>Files</h2>
 
-        <a href="/file/new">Create File</a>
+          <a href="/file/new" title="Create File">
+            <span>➕</span>
+          </a>
+        </div>
 
         {files && <FileList files={files} />}
       </section>
@@ -111,5 +115,14 @@ if (userIsAuthenticated) {
 
   li {
     margin-bottom: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a span {
+    font-size: 2rem;
   }
 </style>
