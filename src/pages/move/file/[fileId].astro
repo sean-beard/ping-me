@@ -33,6 +33,12 @@ document.addEventListener("keydown", (event) => {
     document.getElementById(modalId).style.display = "none";
   }
 });
+
+document.addEventListener("click", (event) => {
+  if (event.target === document.getElementById(modalId)) {
+    document.getElementById(modalId).style.display = "none";
+  }
+});
 </script>
 
 <div id={modalId} class="modal">
