@@ -1,0 +1,25 @@
+---
+
+---
+
+<form hx-post="/folder/create" hx-target="this" hx-swap="outerHTML">
+  <label for="folder-name">Folder name</label>
+  <input
+    id="folder-name"
+    type="text"
+    name="folderName"
+    style="margin-left: 0.5rem"
+  />
+
+  <button type="submit" style="margin-left: 0.5rem">Create</button>
+  <button hx-get="/folder/create-button" style="margin-left: 0.5rem"
+    >Cancel</button
+  >
+</form>
+
+<style>
+  input,
+  button {
+    margin-left: 1rem;
+  }
+</style>
