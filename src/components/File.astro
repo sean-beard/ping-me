@@ -8,6 +8,28 @@ interface Props {
 const { file } = Astro.props;
 ---
 
+<script>
+  import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
+  import "@toast-ui/editor/dist/toastui-editor-viewer.css";
+
+  class FileViewer extends HTMLElement {
+    constructor() {
+      super();
+
+      const body = this.dataset.file;
+
+      const viewerElement: HTMLElement | null =
+        document.querySelector("#viewer");
+
+      if (viewerElement) {
+        new Viewer({ el: viewerElement, initialValue: body });
+      }
+    }
+  }
+
+  customElements.define("file-viewer", FileViewer);
+</script>
+
 <div id="file">
   <div
     style={{
@@ -33,7 +55,8 @@ const { file } = Astro.props;
     </button>
   </div>
 
-  <div set:html={file.html} />
+  <div id="viewer"></div>
+  <file-viewer data-file={file.html}></file-viewer>
 </div>
 
 <style>
