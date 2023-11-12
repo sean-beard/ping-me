@@ -3,7 +3,7 @@ import type { APIRoute } from "astro";
 import { fileService } from "@/services";
 import { getUser, isAuthenticated } from "@/utils/auth";
 
-export const post: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   if (!isAuthenticated(cookies)) {
     return new Response(null, {
       status: 400,

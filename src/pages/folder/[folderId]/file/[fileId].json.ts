@@ -3,7 +3,7 @@ import type { APIRoute } from "astro";
 import { folderService } from "@/services";
 import { isAuthenticated } from "@/utils/auth";
 
-export const del: APIRoute = async ({ params, cookies }) => {
+export const DELETE: APIRoute = async ({ params, cookies }) => {
   if (!isAuthenticated(cookies)) {
     return new Response(null, {
       status: 400,

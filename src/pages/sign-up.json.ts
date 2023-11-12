@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 
 import { userService } from "@/services";
 
-export const post: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request }) => {
   const body = await request.formData();
 
   const username = body.get("username")?.toString();
