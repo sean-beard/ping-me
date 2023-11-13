@@ -1,5 +1,6 @@
 ---
 import { isAuthenticated } from "@/utils/auth";
+import "@fontsource/pacifico";
 
 export interface Props {
   title: string;
@@ -29,7 +30,7 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
   </head>
   <body>
     <header>
-      <a href="/"><h1>PingMe</h1></a>
+      <a href="/" style="text-decoration: none;"><h1>PingMe</h1></a>
       <nav>
         <ul style="list-style: none;">
           {
@@ -77,16 +78,25 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
 
   header {
     background-color: #ede1ca;
-    border-radius: 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     padding: 0.5rem 3rem;
-    margin: 2rem 5rem;
+    margin-bottom: 2rem;
     box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 
   header h1 {
+    font-family: Pacifico, Avenir, Helvetica, Arial, sans-serif;
+    margin: 0;
+    color: var(--black);
+  }
+
+  body {
     margin: 0;
   }
 

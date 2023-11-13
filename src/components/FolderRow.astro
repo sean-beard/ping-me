@@ -41,7 +41,11 @@ const { folderId, folderName, isEditing } = Astro.props;
         <button hx-target="closest li" hx-get={`/folder/${folderId}/edit`}>
           Edit
         </button>
-        <button hx-target="closest ul" hx-delete={`/folder/${folderId}/delete`}>
+        <button
+          hx-target="closest ul"
+          hx-delete={`/folder/${folderId}/delete`}
+          style="margin-left: 0.5rem"
+        >
           Delete
         </button>
       </div>
@@ -50,16 +54,11 @@ const { folderId, folderName, isEditing } = Astro.props;
 }
 
 <style>
-  button + button {
-    margin-left: 0.5rem;
-  }
-
   .folder-row,
   .edit-folder-row {
     display: flex;
     justify-content: space-between;
     background-color: var(--card-background);
-    box-shadow: var(--shadow);
     border-radius: 12px;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0;
