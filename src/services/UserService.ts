@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import type { UserRepository } from "@/repositories/types";
 import type { User } from "./types";
 
+
 export class UserService {
   private userRepository: UserRepository;
 

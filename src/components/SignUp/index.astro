@@ -1,0 +1,55 @@
+---
+import SignUpForm from "./SignUpForm.astro";
+---
+
+<div class="login-container">
+  <h2>Create your account</h2>
+  <p>to continue to <span class="app-name">PingMe</span></p>
+
+  <SignUpForm />
+
+  <p>
+    Have an account? <a href="/login">Sign in</a>
+  </p>
+</div>
+
+<style>
+  h2 {
+    margin: 0;
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  p {
+    color: var(--black);
+  }
+
+  .login-container {
+    background-color: var(--card-background);
+    border-radius: 0.5rem;
+    border: 1px solid #bcb59a;
+    box-shadow: var(--shadow);
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .app-name {
+    font-family: Pacifico, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+  }
+</style>

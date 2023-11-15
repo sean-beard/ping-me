@@ -38,8 +38,8 @@ export class PrismaUserRepository implements UserRepository {
       });
 
       return { id: user.id, username, passwordHash };
-    } catch {
-      console.error("Error creating user");
+    } catch (error) {
+      console.error("Error creating user", error);
       return null;
     }
   }

@@ -2,6 +2,7 @@
 import FileList from "@/components/FileList.astro";
 import FolderList from "@/components/FolderList.astro";
 import NewFolderButton from "@/components/NewFolderButton.astro";
+import SignIn from "@/components/SignIn/index.astro";
 import Layout from "@/layouts/Layout.astro";
 import { fileService, folderService } from "@/services";
 import { getUser, isAuthenticated } from "@/utils/auth";
@@ -22,45 +23,7 @@ if (userIsAuthenticated) {
 ---
 
 <Layout title="Home | PingMe">
-  {
-    !userIsAuthenticated && (
-      <div>
-        <h2>Sign up</h2>
-
-        <form
-          hx-post="/sign-up.json"
-          hx-target="this"
-          hx-swap="outerHTML"
-          method="POST"
-        >
-          <label for="username">Username</label>
-          <input type="text" name="username" id="username" />
-
-          <label for="password">Password</label>
-          <input type="password" name="password" id="password" />
-
-          <button type="submit">Sign up</button>
-        </form>
-
-        <h2>Login</h2>
-
-        <form
-          hx-post="/login.json"
-          hx-target="this"
-          hx-swap="outerHTML"
-          method="POST"
-        >
-          <label for="username">Username</label>
-          <input type="text" name="username" id="username" />
-
-          <label for="password">Password</label>
-          <input type="password" name="password" id="password" />
-
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    )
-  }
+  {!userIsAuthenticated && <SignIn />}
 
   {
     userIsAuthenticated && folders && (
@@ -82,7 +45,7 @@ if (userIsAuthenticated) {
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h2>Files</h2>
 
-          <a href="/file/new" title="Create File">
+          <a href="/file/new" title="Create file">
             <span>➕</span>
           </a>
         </div>

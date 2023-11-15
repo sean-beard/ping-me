@@ -4,7 +4,7 @@ import type { User } from "@/services/types";
 
 export const getUser = (cookies: AstroCookies): User | null => {
   let user: User | undefined;
-  const userJwt = cookies.get("ping-me-user").value ?? "";
+  const userJwt = cookies.get("ping-me-user")?.value ?? "";
 
   try {
     user = jwt.verify(userJwt, import.meta.env.SECRET_JWT_KEY) as User;
@@ -20,4 +20,16 @@ export const isAuthenticated = (cookies: AstroCookies): boolean => {
   const user = getUser(cookies);
 
   return !!user;
+};
+
+export const signIn = (user: User, cookies: AstroCookies) => {
+  const JWT_OPTIONS: jwt.SignOptions = { expiresIn: "7d" };
+  const userJwt = jwt.sign(user, import.meta.env.SECRET_JWT_KEY, JWT_OPTIONS);
+
+  cookies.set("ping-me-user", userJwt, { path: "/" });
+
+  return new Response(JSON.stringify(user), {
+    status: 200,
+    headers: { ["HX-Redirect"]: "/" },
+  });
 };

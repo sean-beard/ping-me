@@ -1,0 +1,31 @@
+---
+import type { APIRoute } from "astro";
+
+import { userService } from "@/services";
+import SignUpForm from "@/components/SignUp/SignUpForm.astro";
+import { signIn } from "@/utils/auth";
+
+let errorMessage = "";
+
+const body = await Astro.request.formData();
+const username = body.get("username")?.toString();
+const password = body.get("password")?.toString();
+
+if (!username || !password) {
+  errorMessage = "Username and password are required";
+} else {
+  try {
+    const user = await userService.createUser(username, password);
+
+    if (!user) {
+      errorMessage = "Error signing up";
+    } else {
+      return signIn(user, Astro.cookies);
+    }
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : "Error signing up";
+  }
+}
+---
+
+<SignUpForm username={username} error={errorMessage} />

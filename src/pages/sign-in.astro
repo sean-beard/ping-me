@@ -1,0 +1,46 @@
+---
+import { userService } from "@/services";
+import { signIn } from "@/utils/auth";
+import SignInForm from "@/components/SignIn/SignInForm.astro";
+
+const getErrorMessage = (userServiceError: unknown) => {
+  const defaultErrorMessage = "Error logging in.";
+
+  if (userServiceError instanceof Error) {
+    switch (userServiceError.message) {
+      case "User not found":
+        return "User not found";
+      case "Invalid password":
+        return "Invalid password";
+      default:
+        return defaultErrorMessage;
+    }
+  }
+
+  return defaultErrorMessage;
+};
+
+let errorMessage = "";
+
+const body = await Astro.request.formData();
+const username = body.get("username")?.toString();
+const password = body.get("password")?.toString();
+
+if (!username || !password) {
+  errorMessage = "Username and password are required";
+} else {
+  try {
+    const user = await userService.login(username, password);
+
+    if (!user) {
+      errorMessage = "User not found";
+    } else {
+      return signIn(user, Astro.cookies);
+    }
+  } catch (error) {
+    errorMessage = getErrorMessage(error);
+  }
+}
+---
+
+<SignInForm username={username} error={errorMessage} />
