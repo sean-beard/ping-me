@@ -15,7 +15,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@astrojs/netlify": "^4.0.1",
     "@fontsource/pacifico": "^5.0.8",
     "@prisma/client": "4.16.2",
     "@toast-ui/editor": "^3.2.2",
