@@ -1,5 +1,6 @@
 ---
 import type { Folder, NotificationPreference } from "@/services/types";
+import Modal from "@/components/Modal.astro";
 
 interface Props {
   folder: Folder;
@@ -19,22 +20,6 @@ const closeButtonId = "notification-preference-close-button";
     const localDate = new Date(`${date}T${time}`);
 
     event.detail.parameters["localDate"] = localDate;
-  });
-
-  document.getElementById(closeButtonId).onclick = () => {
-    document.getElementById(modalId).style.display = "none";
-  };
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      document.getElementById(modalId).style.display = "none";
-    }
-  });
-
-  document.addEventListener("click", (event) => {
-    if (event.target === document.getElementById(modalId)) {
-      document.getElementById(modalId).style.display = "none";
-    }
   });
 
   const date = notificationPreference.date;
@@ -61,238 +46,174 @@ const closeButtonId = "notification-preference-close-button";
   timePicker.value = localTime;
 </script>
 
-<div id={modalId} class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button id={closeButtonId} class="close" title="Close modal">
-        <span>&times;</span>
-      </button>
-    </div>
+<Modal modalId={modalId} closeButtonId={closeButtonId}>
+  <form
+    class="notification-preference-form"
+    hx-post={`/folder/${folder.id}/preference`}
+    hx-target="this"
+    hx-swap="beforebegin"
+  >
+    <input
+      id="date-picker"
+      type="date"
+      name="date"
+      aria-label="Date"
+      required
+    />
 
-    <form
-      hx-post={`/folder/${folder.id}/preference`}
-      hx-target="this"
-      hx-swap="beforebegin"
-    >
-      <input
-        id="date-picker"
-        type="date"
-        name="date"
-        aria-label="Date"
-        required
-      />
+    <input id="time-picker" type="time" name="time" aria-label="Time" />
 
-      <input id="time-picker" type="time" name="time" aria-label="Time" />
+    <fieldset>
+      <legend>Repeat</legend>
 
-      <fieldset>
-        <legend>Repeat</legend>
+      <div>
+        <input
+          id="sunday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="sunday"
+          checked={!!notificationPreference.repeat.sunday}
+        />
+        <label for="sunday-checkbox">Sunday</label>
+      </div>
 
-        <div>
-          <input
-            id="sunday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="sunday"
-            checked={!!notificationPreference.repeat.sunday}
-          />
-          <label for="sunday-checkbox">Sunday</label>
-        </div>
+      <div>
+        <input
+          id="monday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="monday"
+          checked={!!notificationPreference.repeat.monday}
+        />
+        <label for="monday-checkbox">Monday</label>
+      </div>
 
-        <div>
-          <input
-            id="monday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="monday"
-            checked={!!notificationPreference.repeat.monday}
-          />
-          <label for="monday-checkbox">Monday</label>
-        </div>
+      <div>
+        <input
+          id="tuesday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="tuesday"
+          checked={!!notificationPreference.repeat.tuesday}
+        />
+        <label for="tuesday-checkbox">Tuesday</label>
+      </div>
 
-        <div>
-          <input
-            id="tuesday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="tuesday"
-            checked={!!notificationPreference.repeat.tuesday}
-          />
-          <label for="tuesday-checkbox">Tuesday</label>
-        </div>
+      <div>
+        <input
+          id="wednesday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="wednesday"
+          checked={!!notificationPreference.repeat.wednesday}
+        />
+        <label for="wednesday-checkbox">Wednesday</label>
+      </div>
 
-        <div>
-          <input
-            id="wednesday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="wednesday"
-            checked={!!notificationPreference.repeat.wednesday}
-          />
-          <label for="wednesday-checkbox">Wednesday</label>
-        </div>
+      <div>
+        <input
+          id="thursday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="thursday"
+          checked={!!notificationPreference.repeat.thursday}
+        />
+        <label for="thursday-checkbox">Thursday</label>
+      </div>
 
-        <div>
-          <input
-            id="thursday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="thursday"
-            checked={!!notificationPreference.repeat.thursday}
-          />
-          <label for="thursday-checkbox">Thursday</label>
-        </div>
+      <div>
+        <input
+          id="friday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="friday"
+          checked={!!notificationPreference.repeat.friday}
+        />
+        <label for="friday-checkbox">Friday</label>
+      </div>
 
-        <div>
-          <input
-            id="friday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="friday"
-            checked={!!notificationPreference.repeat.friday}
-          />
-          <label for="friday-checkbox">Friday</label>
-        </div>
+      <div>
+        <input
+          id="saturday-checkbox"
+          type="checkbox"
+          name="repeat"
+          value="saturday"
+          checked={!!notificationPreference.repeat.saturday}
+        />
+        <label for="saturday-checkbox">Saturday</label>
+      </div>
+    </fieldset>
 
-        <div>
-          <input
-            id="saturday-checkbox"
-            type="checkbox"
-            name="repeat"
-            value="saturday"
-            checked={!!notificationPreference.repeat.saturday}
-          />
-          <label for="saturday-checkbox">Saturday</label>
-        </div>
-      </fieldset>
+    <button type="submit">Update</button>
+  </form>
 
-      <button type="submit">Update</button>
-    </form>
-
-    {/* TODO: remove this */}
-    <button
-      style="width: 160px; position: absolute;"
-      hx-post="/notification/send"
-      hx-swap="none"
-    >
-      Send notification
-    </button>
-  </div>
-</div>
+  {/* TODO: remove this */}
+  <button
+    style="width: 160px; position: absolute;"
+    hx-post="/notification/send"
+    hx-swap="none"
+  >
+    Send notification
+  </button>
+</Modal>
 
 <style>
-  form {
+  .notification-preference-form {
     display: flex;
     flex-direction: column;
     width: 400px;
     margin: 0 auto;
   }
 
-  label {
+  .notification-preference-form label {
     margin-bottom: 0.5rem;
     margin-left: 0.5rem;
   }
 
-  label:hover,
-  input:hover {
+  .notification-preference-form label:hover,
+  .notification-preference-form input:hover {
     cursor: pointer;
   }
 
-  input {
+  .notification-preference-form input {
     margin-bottom: 1rem;
   }
 
-  fieldset {
-    margin-bottom: 1rem;
+  .notification-preference-form fieldset {
     padding: 1rem;
     font-size: large;
   }
 
-  fieldset label {
+  .notification-preference-form fieldset label {
     margin-right: 1rem;
   }
 
-  button {
+  .notification-preference-form button {
     margin-top: 1rem;
     padding: 0.5rem;
     font-size: large;
   }
 
-  input[type="checkbox"] {
+  .notification-preference-form input[type="checkbox"] {
     transform: scale(1.5);
   }
 
-  input[type="checkbox"]:checked + label {
+  .notification-preference-form input[type="checkbox"]:checked + label {
     font-weight: bold;
   }
 
-  input[type="date"],
-  input[type="time"] {
+  .notification-preference-form input[type="date"],
+  .notification-preference-form input[type="time"] {
     height: 45px;
     width: 50%;
-    margin: 1rem auto;
+    margin: 0.5rem auto;
     font-size: x-large;
-  }
-
-  .modal {
-    display: block;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background);
-    padding: 20px;
-    border: 1px solid #888;
-    overflow-y: scroll;
-    /* this is different than other modals */
-    height: 650px;
-    margin: 6rem auto;
-    max-width: 600px;
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .close {
-    float: right;
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-  }
-
-  .close span {
-    font-size: 3rem;
-  }
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
   }
 
   /* Mobile */
   @media (max-width: 37.5em) {
-    form {
+    .notification-preference-form {
       width: 100%;
-    }
-
-    .modal-content {
-      margin: 5rem auto;
-      height: 100%;
-      width: 100%;
-      max-width: 100%;
-      border: none;
-      z-index: 100;
     }
   }
 </style>

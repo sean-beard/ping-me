@@ -1,4 +1,5 @@
 ---
+import Modal from "@/components/Modal.astro";
 import { fileService } from "@/services";
 import type { File } from "@/services/types";
 import { getUser } from "@/utils/auth";
@@ -24,102 +25,48 @@ try {
 }
 ---
 
-<script define:vars={{ modalId, closeButtonId }}>
-  document.getElementById(closeButtonId).onclick = () => {
-    document.getElementById(modalId).style.display = "none";
-  };
+<Modal modalId={modalId} closeButtonId={closeButtonId}>
+  {!files && <h2>No files</h2>}
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      document.getElementById(modalId).style.display = "none";
-    }
-  });
+  {
+    files && (
+      <form
+        class="move-form"
+        hx-post={`/folder/${folderId}/move/files.json`}
+        target={`#${modalId}`}
+      >
+        <div style="margin-bottom: 1rem;">
+          {files.map((file) => (
+            <div>
+              <input
+                class="move-checkbox"
+                type="checkbox"
+                id={file.id.toString()}
+                name="fileIds"
+                value={file.id}
+              />
+              <label for={file.id.toString()}>{file.name}</label>
+            </div>
+          ))}
+        </div>
 
-  document.addEventListener("click", (event) => {
-    if (event.target === document.getElementById(modalId)) {
-      document.getElementById(modalId).style.display = "none";
-    }
-  });
-</script>
-
-<div id={modalId} class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button id={closeButtonId} class="close" title="Close modal">
-        <span>&times;</span>
-      </button>
-    </div>
-
-    {!files && <h2>No files</h2>}
-
-    {
-      files && (
-        <form
-          class="move-form"
-          hx-post={`/folder/${folderId}/move/files.json`}
-          target={`#${modalId}`}
-        >
-          <div style="margin-bottom: 1rem;">
-            {files.map((file) => (
-              <div>
-                <input
-                  class="move-checkbox"
-                  type="checkbox"
-                  id={file.id.toString()}
-                  name="fileIds"
-                  value={file.id}
-                />
-                <label for={file.id.toString()}>{file.name}</label>
-              </div>
-            ))}
-          </div>
-
-          <button type="submit" class="move-button">
-            Move
-          </button>
-        </form>
-      )
-    }
-  </div>
-</div>
+        <button type="submit" class="move-button">
+          Move
+        </button>
+      </form>
+    )
+  }
+</Modal>
 
 <style is:inline>
-  .modal {
-    display: block;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background);
-    margin: 7rem auto;
-    padding: 20px;
-    border: 1px solid #888;
-    height: 300px;
-    width: 80%;
-    max-width: 400px;
-    overflow-y: scroll;
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: flex-end;
-  }
-
   .move-form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
+    flex: 1;
+    min-width: 300px;
     max-width: 400px;
+    margin: 0 auto;
   }
 
   label {
@@ -148,24 +95,5 @@ try {
     margin-top: 1rem;
     padding: 0.5rem;
     font-size: large;
-  }
-
-  .close {
-    float: right;
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-  }
-
-  .close span {
-    font-size: 2rem;
-  }
-
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
   }
 </style>
