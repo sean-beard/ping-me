@@ -28,3 +28,8 @@ export const notificationService = new NotificationService(
 
 const reminderRepository = new PrismaReminderRepository(client);
 export const reminderService = new ReminderService(reminderRepository);
+
+// attempt to send due reminders every minute
+setInterval(() => {
+  folderService.sendNotifications();
+}, 60000);
