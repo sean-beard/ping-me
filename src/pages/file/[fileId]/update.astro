@@ -28,17 +28,17 @@ const body = await Astro.request.formData();
 const fileName = body.get("fileName");
 const fileBody = body.get("fileBody");
 
-if (!fileName || !fileBody) {
+if (!fileName) {
   return new Response(null, {
     status: 400,
     statusText: "File name and body are required",
   });
 }
 
-const file = {
-  name: fileName!.toString(),
-  html: fileBody!.toString(),
-};
+const name = fileName.toString().trim();
+const html = fileBody ? fileBody.toString() : "";
+
+const file = { name, html };
 
 updatedFile = await fileService.updateFile(Number(fileId), file);
 
@@ -52,13 +52,7 @@ if (!updatedFile) {
     <>
       <h2>{error}</h2>
 
-      <FileEdit
-        file={{
-          id: Number(fileId),
-          name: fileName.toString(),
-          html: fileBody.toString(),
-        }}
-      />
+      <FileEdit file={{ id: Number(fileId), name: name, html: html }} />
     </>
   )
 }

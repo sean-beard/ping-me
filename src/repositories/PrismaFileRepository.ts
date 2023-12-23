@@ -23,6 +23,23 @@ export class PrismaFileRepository {
     }
   }
 
+  async getFilesByIds(
+    fileIds: number[],
+    userId: number,
+  ): Promise<(File | null)[] | null> {
+    try {
+      const files = await this.client.file.findMany({
+        where: { id: { in: fileIds }, userId },
+        select: { id: true, name: true, html: true, userId: true },
+      });
+
+      return files;
+    } catch {
+      console.error("Error getting files with ids: ", fileIds.join(", "));
+      return null;
+    }
+  }
+
   async getFile(id: number): Promise<File | null> {
     const file = await this.client.file.findUnique({
       where: { id },
