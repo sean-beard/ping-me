@@ -9,9 +9,14 @@ const { file } = Astro.props;
 ---
 
 <form hx-put={`/file/${file.id}/update`}>
-  <label for="file-name">File name</label>
-  <br />
-  <input type="text" id="file-name" name="fileName" value={file.name} />
+  <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex;">
+      <label for="file-name" style="margin-right: 1rem;">File name</label>
+      <input type="text" id="file-name" name="fileName" value={file.name} />
+    </div>
+
+    <button type="submit">Update</button>
+  </div>
 
   <br />
   <br />
@@ -23,9 +28,4 @@ const { file } = Astro.props;
   <input type="hidden" id="file-body" name="fileBody" value={file.html} />
 
   <file-editor data-file={file.html}></file-editor>
-
-  <br />
-  <br />
-
-  <button type="submit">Update</button>
 </form>
