@@ -27,6 +27,7 @@
     "web-push": "^3.6.6"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.4.1",

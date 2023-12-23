@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for ping-me on 2023-12-23T12:24:49-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "ping-me"
+primary_region = "den"
+
+[build]
+
+[[mounts]]
+  source = "ping_me_db"
+  destination = "/mnt/ping_me_db"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
