@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
-import type { UserRepository } from "@/repositories/types";
 import type { User } from "./types";
+import type { PrismaUserRepository } from "@/repositories/PrismaUserRepository";
 
+type UserRepository = PrismaUserRepository;
 
 export class UserService {
   private userRepository: UserRepository;
@@ -34,5 +35,19 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async getNotificationsEnabledPreference(userId: number): Promise<boolean> {
+    return this.userRepository.getNotificationsEnabledPreference(userId);
+  }
+
+  async setNotificationsEnabledPreference(
+    userId: number,
+    enabled: boolean,
+  ): Promise<void> {
+    return this.userRepository.setNotificationsEnabledPreference(
+      userId,
+      enabled,
+    );
   }
 }

@@ -1,4 +1,12 @@
-export type FolderNotificationPreference = "daily" | "weekly" | "never";
+export interface NotificationRepeat {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+}
 
 export interface Folder {
   id: number;
@@ -6,8 +14,14 @@ export interface Folder {
   userId: number;
 }
 
+export interface NotificationPreference {
+  date: string;
+  time: string;
+  repeat: NotificationRepeat;
+}
+
 export interface Notification {
-  notificationPreference: FolderNotificationPreference;
+  notificationPreference: NotificationPreference;
 }
 
 export interface File {

@@ -1,12 +1,6 @@
 ---
 import { getUser, isAuthenticated } from "@/utils/auth";
 import { folderService } from "@/services";
-import type { FolderNotificationPreference } from "@/services/types";
-
-const isValidNotificationPreference = (
-  pref: string,
-): pref is FolderNotificationPreference =>
-  ["daily", "weekly", "never"].includes(pref.toString());
 
 const cookies = Astro.cookies;
 const params = Astro.params;
@@ -36,38 +30,58 @@ if (!folderId || isNaN(Number(folderId))) {
 
 const body = await Astro.request.formData();
 
-const notificationPreferenceFormData = body.get("notificationPreference");
+const localDateFormData = body.get("localDate");
+const repeatFormData = body.getAll("repeat");
 
-if (!notificationPreferenceFormData) {
+if (!localDateFormData) {
   return new Response(
     JSON.stringify({ error: "Notification preference is required" }),
     { status: 400 },
   );
 }
 
-const notificationPreference = notificationPreferenceFormData.toString();
+function getUtcDate(localDate: string) {
+  const date = new Date(localDate);
+  const timeZoneOffset = date.getTimezoneOffset();
 
-if (!isValidNotificationPreference(notificationPreference)) {
-  console.log(`Invalid notification preference: ${notificationPreference}`);
-
-  return new Response(
-    JSON.stringify({ error: "Invalid notification preference" }),
-    { status: 400 },
+  const utcDate = new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes() + timeZoneOffset,
+      date.getSeconds(),
+    ),
   );
+
+  return utcDate;
 }
 
-const result = folderService.setNotificationPreference(
+const localDate = localDateFormData.toString();
+const utcDate = getUtcDate(localDate);
+
+const notificationPreference = {
+  date: utcDate.toISOString().slice(0, 10),
+  time: utcDate.toISOString().slice(11, 16),
+  repeat: {
+    sunday: repeatFormData.includes("sunday"),
+    monday: repeatFormData.includes("monday"),
+    tuesday: repeatFormData.includes("tuesday"),
+    wednesday: repeatFormData.includes("wednesday"),
+    thursday: repeatFormData.includes("thursday"),
+    friday: repeatFormData.includes("friday"),
+    saturday: repeatFormData.includes("saturday"),
+  },
+};
+
+const result = await folderService.setNotificationPreference(
   user.id,
   Number(folderId),
   notificationPreference,
 );
-
-if (!result) {
-  return new Response(
-    JSON.stringify({ error: "Error updating notification preference" }),
-    { status: 500 },
-  );
-}
 ---
 
-<p>Notification preference updated</p>
+<!-- TODO: support closing notification -->
+{result && <p style="text-align: center;">Notification preference updated</p>}
+{!result && <p style="text-align: center;">Error updating notification preference</p>}

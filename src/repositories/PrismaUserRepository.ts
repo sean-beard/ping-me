@@ -1,8 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
 import type { User } from "@/services/types";
-import type { UserRepository } from "./types";
 
-export class PrismaUserRepository implements UserRepository {
+export class PrismaUserRepository {
   private client: PrismaClient;
 
   constructor(client: PrismaClient) {
@@ -41,6 +40,45 @@ export class PrismaUserRepository implements UserRepository {
     } catch (error) {
       console.error("Error creating user", error);
       return null;
+    }
+  }
+
+  async getNotificationsEnabledPreference(userId: number): Promise<boolean> {
+    try {
+      const user = await this.client.user.findUnique({
+        where: { id: userId },
+        select: { notificationsEnabled: true },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      return user.notificationsEnabled;
+    } catch (error) {
+      console.error(
+        `Error getting notifications enabled preference for user with ID ${userId}:`,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  async setNotificationsEnabledPreference(
+    userId: number,
+    enabled: boolean,
+  ): Promise<void> {
+    try {
+      await this.client.user.update({
+        where: { id: userId },
+        data: { notificationsEnabled: enabled },
+      });
+    } catch (error) {
+      console.error(
+        `Error setting notifications enabled preference for user with ID ${userId}:`,
+        error,
+      );
+      throw error;
     }
   }
 }
