@@ -16,7 +16,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const fileName = body.get("fileName");
   const fileBody = body.get("fileBody");
 
-  if (!fileName || !fileBody) {
+  if (!fileName) {
     return new Response(
       JSON.stringify({ error: "File name and body are required" }),
       {
@@ -27,7 +27,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const file = {
     name: fileName.toString(),
-    html: fileBody.toString(),
+    html: fileBody ? fileBody.toString() : "",
   };
 
   const user = getUser(cookies);
