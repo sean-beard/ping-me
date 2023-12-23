@@ -28,6 +28,7 @@ RUN yarn install --frozen-lockfile --production=false
 
 # Generate Prisma Client
 COPY --link prisma .
+RUN npx prisma generate
 RUN npx prisma migrate
 
 # Copy application code
@@ -60,5 +61,5 @@ ENTRYPOINT [ "/app/docker-entrypoint.js" ]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-ENV DATABASE_URL="file:///data/sqlite.db"
+ENV DATABASE_URL="file:///data/ping_me_db.db"
 CMD [ "yarn", "run", "start" ]

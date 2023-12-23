@@ -10,7 +10,7 @@ primary_region = "den"
 
 [[mounts]]
   source = "ping_me_db"
-  destination = "/mnt/ping_me_db"
+  destination = "/data"
 
 [http_service]
   internal_port = 3000
