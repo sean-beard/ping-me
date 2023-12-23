@@ -1,0 +1,140 @@
+---
+import { fileService } from "@/services";
+import type { File } from "@/services/types";
+import { getUser } from "@/utils/auth";
+
+const modalId = "move-modal";
+const closeButtonId = "close-modal";
+
+const user = getUser(Astro.cookies);
+
+if (!user) {
+  console.error("User not found");
+  return Astro.redirect("/");
+}
+
+const { folderId } = Astro.params;
+
+let files: File[] | null = null;
+
+try {
+  files = await fileService.getFiles(user.id);
+} catch (error) {
+  console.error(error);
+}
+---
+
+<script define:vars={{ modalId, closeButtonId }}>
+  document.getElementById(closeButtonId).onclick = () => {
+    document.getElementById(modalId).style.display = "none";
+  };
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      document.getElementById(modalId).style.display = "none";
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target === document.getElementById(modalId)) {
+      document.getElementById(modalId).style.display = "none";
+    }
+  });
+</script>
+
+<div id={modalId} class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button id={closeButtonId} class="close">&times;</button>
+    </div>
+
+    {!files && <h2>No files</h2>}
+
+    {
+      files && (
+        <form
+          hx-post={`/folder/${folderId}/move/files.json`}
+          target={`#${modalId}`}
+        >
+          <div style="margin-bottom: 1rem;">
+            {files.map((file) => (
+              <div>
+                <input
+                  class="move-checkbox"
+                  type="checkbox"
+                  id={file.id.toString()}
+                  name="fileIds"
+                  value={file.id}
+                />
+                <label for={file.id.toString()}>{file.name}</label>
+              </div>
+            ))}
+          </div>
+
+          <button type="submit" class="move-button">
+            Move
+          </button>
+        </form>
+      )
+    }
+  </div>
+</div>
+
+<style is:inline>
+  .modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    height: 300px;
+    width: 80%;
+    max-width: 400px;
+    overflow-y: scroll;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  form {
+    color: var(--black);
+    margin: 2rem;
+  }
+
+  label,
+  .move-checkbox {
+    cursor: pointer;
+  }
+
+  .move-button {
+    float: right;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>

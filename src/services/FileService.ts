@@ -16,6 +16,19 @@ export class FileService {
     return files;
   }
 
+  async getFilesByIds(
+    fileIds: number[],
+    userId: number,
+  ): Promise<File[] | null> {
+    const files = await this.fileRepository.getFilesByIds(fileIds, userId);
+
+    if (!files) {
+      return null;
+    }
+
+    return files.filter(Boolean) as File[];
+  }
+
   async getFile(fileId: number, userId: number): Promise<File | null> {
     const file = await this.fileRepository.getFile(fileId);
 

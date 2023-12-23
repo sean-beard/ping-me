@@ -73,6 +73,11 @@ const notificationPreference = await folderService.getNotificationPreference(
         <section>
           <h3>Files</h3>
 
+          <button hx-get={`/folder/${folderId}/move/files`} hx-target="#modal">
+            Add files
+          </button>
+          <div id="modal" />
+
           {!!files?.length && <FileList files={files} folderId={folder?.id} />}
         </section>
       </>
