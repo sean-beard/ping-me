@@ -6,10 +6,12 @@ export const getUser = (cookies: AstroCookies): User | null => {
   let user: User | undefined;
   const userJwt = cookies.get("ping-me-user")?.value ?? "";
 
+  if (!userJwt) return null;
+
   try {
     user = jwt.verify(userJwt, import.meta.env.SECRET_JWT_KEY) as User;
   } catch {
-    console.log("User not found in JWT");
+    console.log(`User not found in JWT: ${userJwt}`);
     return null;
   }
 

@@ -1,0 +1,110 @@
+---
+interface Props {
+  userId: number;
+}
+
+import { userService } from "@/services";
+
+const { userId } = Astro.props;
+
+let enabled: boolean | null = null;
+
+try {
+  enabled = await userService.getNotificationsEnabledPreference(userId);
+} catch (error) {
+  if (error instanceof Error && error.message === "User not found") {
+    console.error("User not found. Will not request notification permission.");
+
+    // TODO: logout and redirect to login page
+  } else {
+    console.error("Server error. Will not request notification permission.");
+  }
+}
+---
+
+<notifications-enabled-toggle userId={userId}>
+  <div class="switch">
+    <label>
+      Notifications: Off
+      <input id="notif-toggle" type="checkbox" checked={enabled} />
+      <span class="lever"></span>
+       On
+    </label>
+  </div>
+</notifications-enabled-toggle>
+
+<script>
+  import { attemptToEnableNotifications } from "../utils/serviceWorker";
+
+  class NotificationsEnabledToggle extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      const userId = this.attributes.getNamedItem("userId")?.value;
+
+      const toggleInput = document.querySelector("#notif-toggle");
+
+      if (toggleInput && userId) {
+        if (Notification.permission !== "granted") {
+          toggleInput.removeAttribute("checked");
+        }
+
+        this.setNotificationChangeListener(toggleInput);
+        this.setToggleChangeListener(toggleInput, Number(userId));
+      }
+    }
+
+    private setNotificationChangeListener(toggleInput: Element) {
+      navigator.permissions
+        .query({ name: "notifications" })
+        .then((permission) => {
+          permission.onchange = () => {
+            if (Notification.permission !== "granted") {
+              // TODO: remove or disable subsription from server as well
+              toggleInput.removeAttribute("checked");
+            }
+          };
+        });
+    }
+
+    private setToggleChangeListener(toggleInput: Element, userId: number) {
+      toggleInput.addEventListener("change", async (e) => {
+        const enabled = (e.target as HTMLInputElement | null)?.checked;
+
+        if (enabled === null) {
+          console.error("Error: attempted to set notifications enabled to null");
+          return;
+        }
+
+        try {
+          await fetch("/user/notifications-enabled", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+              enabled,
+            }),
+          });
+        } catch {
+          console.error(
+            "Server error. Will not request notification permission.",
+          );
+          return;
+        }
+
+        if (enabled) {
+          await attemptToEnableNotifications();
+        }
+      });
+    }
+  }
+
+  customElements.define(
+    "notifications-enabled-toggle",
+    NotificationsEnabledToggle,
+  );
+</script>

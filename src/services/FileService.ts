@@ -1,5 +1,7 @@
-import type { FileRepository } from "../repositories/types";
+import type { PrismaFileRepository } from "@/repositories/PrismaFileRepository";
 import type { File } from "./types";
+
+type FileRepository = PrismaFileRepository;
 
 export class FileService {
   private fileRepository: FileRepository;

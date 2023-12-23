@@ -1,8 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
-import type { FileRepository } from "./types";
 import type { File } from "../services/types";
 
-export class PrismaFileRepository implements FileRepository {
+export class PrismaFileRepository {
   private client: PrismaClient;
 
   constructor(client: PrismaClient) {

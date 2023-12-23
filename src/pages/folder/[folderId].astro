@@ -33,11 +33,10 @@ const data = await Promise.all([
 folder = data[0];
 files = data[1];
 
-const notification = await folderService.getNotificationPreference(
+const notificationPreference = await folderService.getNotificationPreference(
   folderIdNum,
   user.id,
 );
-const notificationPreference = notification?.notificationPreference;
 ---
 
 <Layout title="Folder | PingMe">

@@ -1,4 +1,5 @@
 ---
+import EnableNotificationToggle from "@/components/EnableNotificationToggle.astro";
 import FileList from "@/components/FileList.astro";
 import FolderList from "@/components/FolderList.astro";
 import NewFolderButton from "@/components/NewFolderButton.astro";
@@ -9,11 +10,12 @@ import { getUser, isAuthenticated } from "@/utils/auth";
 
 let folders = null;
 let files = null;
+let user = null;
 
 const userIsAuthenticated = isAuthenticated(Astro.cookies);
 
 if (userIsAuthenticated) {
-  const user = getUser(Astro.cookies);
+  user = getUser(Astro.cookies);
 
   if (user) {
     folders = await folderService.getFolders(user.id);
@@ -41,17 +43,30 @@ if (userIsAuthenticated) {
 
   {
     userIsAuthenticated && (
-      <section>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>Files</h2>
+      <>
+        <section>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Files</h2>
 
-          <a href="/file/new" title="Create file">
-            <span>➕</span>
-          </a>
-        </div>
+            <a href="/file/new" title="Create file">
+              <span>➕</span>
+            </a>
+          </div>
 
-        {files && <FileList files={files} />}
-      </section>
+          {files && <FileList files={files} />}
+        </section>
+
+        {user && <EnableNotificationToggle userId={user.id} />}
+
+        {/* TODO: remove this */}
+        <button
+          style="margin-top: 2rem;"
+          hx-post="/notification/send"
+          hx-swap="none"
+        >
+          Send notification
+        </button>
+      </>
     )
   }
 </Layout>
