@@ -4,9 +4,14 @@ import FileLayout from "@/layouts/FileLayout.astro";
 
 <FileLayout title="New File | PingMe">
   <form hx-post="/file.json">
-    <label for="file-name">File name</label>
-    <br />
-    <input type="text" id="file-name" name="fileName" />
+    <div style="display: flex; justify-content: space-between;">
+      <div style="display: flex;">
+        <label for="file-name" style="margin-right: 1rem;">File name</label>
+        <input type="text" id="file-name" name="fileName" />
+      </div>
+
+      <button type="submit">Create</button>
+    </div>
 
     <br />
     <br />
@@ -15,10 +20,5 @@ import FileLayout from "@/layouts/FileLayout.astro";
     <file-editor></file-editor>
     <div id="editor"></div>
     <input type="hidden" id="file-body" name="fileBody" />
-
-    <br />
-    <br />
-
-    <button type="submit">Create</button>
   </form>
 </FileLayout>
