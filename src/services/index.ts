@@ -1,3 +1,4 @@
+import cron from "node-cron";
 import { PrismaClient } from "@prisma/client";
 import { PrismaUserRepository } from "@/repositories/PrismaUserRepository";
 import { PrismaFileRepository } from "@/repositories/PrismaFileRepository";
@@ -29,7 +30,7 @@ export const notificationService = new NotificationService(
 const reminderRepository = new PrismaReminderRepository(client);
 export const reminderService = new ReminderService(reminderRepository);
 
-// attempt to send due reminders every minute
-setInterval(() => {
-  folderService.sendNotifications();
-}, 60000);
+// attempt to send due reminders every hour
+cron.schedule("0 * * * *", async () => {
+  await folderService.sendNotifications();
+});
