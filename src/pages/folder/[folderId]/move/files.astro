@@ -45,7 +45,9 @@ try {
 <div id={modalId} class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button id={closeButtonId} class="close">&times;</button>
+      <button id={closeButtonId} class="close" title="Close modal">
+        <span>&times;</span>
+      </button>
     </div>
 
     {!files && <h2>No files</h2>}
@@ -53,6 +55,7 @@ try {
     {
       files && (
         <form
+          class="move-form"
           hx-post={`/folder/${folderId}/move/files.json`}
           target={`#${modalId}`}
         >
@@ -97,7 +100,7 @@ try {
     display: flex;
     flex-direction: column;
     background-color: var(--background);
-    margin: 15% auto;
+    margin: 7rem auto;
     padding: 20px;
     border: 1px solid #888;
     height: 300px;
@@ -111,9 +114,24 @@ try {
     justify-content: flex-end;
   }
 
-  form {
-    color: var(--black);
-    margin: 2rem;
+  .move-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 400px;
+  }
+
+  label {
+    margin-left: 0.5rem;
+  }
+
+  input {
+    margin-bottom: 1rem;
+  }
+
+  .move-checkbox:checked + label {
+    font-weight: bold;
   }
 
   label,
@@ -121,16 +139,32 @@ try {
     cursor: pointer;
   }
 
+  .move-checkbox {
+    margin-bottom: 1rem;
+    transform: scale(1.5);
+  }
+
   .move-button {
-    float: right;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: large;
+    cursor: pointer;
   }
 
   .close {
-    color: #aaa;
     float: right;
-    font-size: 28px;
-    font-weight: bold;
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
   }
+
+  .close span {
+    font-size: 2rem;
+  }
+
   .close:hover,
   .close:focus {
     color: black;

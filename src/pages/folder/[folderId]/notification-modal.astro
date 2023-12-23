@@ -1,0 +1,49 @@
+---
+import NotificationPreferenceModal from "@/components/NotificationPreferenceModal.astro";
+import { folderService } from "@/services";
+import type { Folder } from "@/services/types";
+import { getUser } from "@/utils/auth";
+
+const { folderId } = Astro.params;
+
+const folderIdNum = Number(folderId);
+
+const user = getUser(Astro.cookies);
+
+if (!user) {
+  console.error("User not found");
+  return Astro.redirect("/");
+}
+
+if (!folderIdNum || Number.isNaN(folderIdNum)) {
+  console.error("Invalid folder ID");
+  return Astro.redirect("/");
+}
+
+let folder: Folder | null = null;
+
+try {
+  folder = await folderService.getFolder(folderIdNum, user.id);
+} catch (error) {
+  console.error("Error getting folder", error);
+}
+
+let notificationPreference = null;
+try {
+  notificationPreference = await folderService.getNotificationPreference(
+    folderIdNum,
+    user.id,
+  );
+} catch (error) {
+  console.error("Error getting notification preference", error);
+}
+---
+
+{
+  folder && notificationPreference && (
+    <NotificationPreferenceModal
+      folder={folder}
+      notificationPreference={notificationPreference}
+    />
+  )
+}

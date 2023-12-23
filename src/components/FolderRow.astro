@@ -38,7 +38,11 @@ const { folderId, folderName, isEditing } = Astro.props;
       <a href={`/folder/${folderId}`}>{folderName}</a>
 
       <div>
-        <button hx-target="closest li" hx-get={`/folder/${folderId}/edit`}>
+        <button
+          class="edit-button"
+          hx-target="closest li"
+          hx-get={`/folder/${folderId}/edit`}
+        >
           Edit
         </button>
         <button
@@ -65,7 +69,14 @@ const { folderId, folderName, isEditing } = Astro.props;
     list-style: none;
   }
 
-  .edit-folder-row {
-    max-width: 450px;
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .folder-row {
+      width: 100%;
+    }
+
+    .edit-button {
+      display: none;
+    }
   }
 </style>
