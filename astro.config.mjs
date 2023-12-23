@@ -1,5 +1,7 @@
 import { defineConfig } from "astro/config";
 
+import netlify from "@astrojs/netlify/functions";
+
 // https://astro.build/config
 export default defineConfig({
   output: "server",
@@ -7,4 +9,5 @@ export default defineConfig({
     host: true,
     port: 3000,
   },
+  adapter: netlify(),
 });
