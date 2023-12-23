@@ -1,6 +1,5 @@
 ---
 import FileList from "@/components/FileList.astro";
-import NotificationPreferenceForm from "@/components/NotificationPreferenceForm.astro";
 import Layout from "@/layouts/Layout.astro";
 import { folderService } from "@/services";
 import type { File, Folder } from "@/services/types";
@@ -32,11 +31,6 @@ const data = await Promise.all([
 
 folder = data[0];
 files = data[1];
-
-const notificationPreference = await folderService.getNotificationPreference(
-  folderIdNum,
-  user.id,
-);
 ---
 
 <Layout title="Folder | PingMe">
@@ -44,31 +38,22 @@ const notificationPreference = await folderService.getNotificationPreference(
 
   {
     folder && (
-      <>
-        <h2>{folder.name}</h2>
-
-        <h3>Settings</h3>
-
-        <NotificationPreferenceForm
-          folder={folder}
-          notificationPreference={notificationPreference}
-        />
-
-        {!!files?.length && (
-          <div
-            style={{ display: "flex", alignItems: "center", marginTop: "1rem" }}
-          >
+      <div class="folder-page">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>{folder.name}</h2>
+          <div>
             <button
-              hx-get={`/folder/${folder?.id}/file/random`}
-              hx-target="#random-file-name"
+              class="notification-preference-button"
+              hx-get={`/folder/${folderId}/notification-modal`}
+              hx-target="#modal-container"
               hx-swap="innerHTML"
+              title="Notification preferences"
             >
-              Get random file
+              <span>🛎️</span>
             </button>
-
-            <div id="random-file-name" style="margin-left: 1rem;" />
+            <div id="modal-container" />
           </div>
-        )}
+        </div>
 
         <section>
           <div style="display: flex; justify-content: space-between;">
@@ -84,17 +69,31 @@ const notificationPreference = await folderService.getNotificationPreference(
               <span>➕</span>
             </button>
           </div>
-
           <div id="modal" />
 
-          <button hx-get={`/folder/${folderId}/move/files`} hx-target="#modal">
-            Add files
-          </button>
-          <div id="modal" />
+          {!!files?.length && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "2rem",
+              }}
+            >
+              <button
+                hx-get={`/folder/${folder?.id}/file/random`}
+                hx-target="#random-file-name"
+                hx-swap="innerHTML"
+              >
+                Get random file
+              </button>
+
+              <div id="random-file-name" style="margin-left: 1rem;" />
+            </div>
+          )}
 
           {!!files?.length && <FileList files={files} folderId={folder?.id} />}
         </section>
-      </>
+      </div>
     )
   }
 </Layout>
@@ -103,6 +102,12 @@ const notificationPreference = await folderService.getNotificationPreference(
   h2,
   h3 {
     color: var(--black);
+  }
+
+  .folder-page {
+    margin: 0 auto;
+    max-width: 700px;
+    padding: 1rem;
   }
 
   .add-files-button {
@@ -115,6 +120,19 @@ const notificationPreference = await folderService.getNotificationPreference(
   }
 
   .add-files-button span {
+    font-size: 2rem;
+  }
+
+  .notification-preference-button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .notification-preference-button span {
     font-size: 2rem;
   }
 </style>

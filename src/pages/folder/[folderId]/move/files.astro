@@ -55,6 +55,7 @@ try {
     {
       files && (
         <form
+          class="move-form"
           hx-post={`/folder/${folderId}/move/files.json`}
           target={`#${modalId}`}
         >
@@ -99,7 +100,7 @@ try {
     display: flex;
     flex-direction: column;
     background-color: var(--background);
-    margin: 15% auto;
+    margin: 7rem auto;
     padding: 20px;
     border: 1px solid #888;
     height: 300px;
@@ -113,7 +114,7 @@ try {
     justify-content: flex-end;
   }
 
-  form {
+  .move-form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
