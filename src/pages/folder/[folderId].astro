@@ -71,7 +71,21 @@ const notificationPreference = await folderService.getNotificationPreference(
         )}
 
         <section>
-          <h3>Files</h3>
+          <div style="display: flex; justify-content: space-between;">
+            <h3>Files</h3>
+
+            <button
+              class="add-files-button"
+              hx-get={`/folder/${folderId}/move/files`}
+              hx-target="#modal"
+              hx-swap="innerHTML"
+              title="Add files"
+            >
+              <span>➕</span>
+            </button>
+          </div>
+
+          <div id="modal" />
 
           <button hx-get={`/folder/${folderId}/move/files`} hx-target="#modal">
             Add files
@@ -89,5 +103,18 @@ const notificationPreference = await folderService.getNotificationPreference(
   h2,
   h3 {
     color: var(--black);
+  }
+
+  .add-files-button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .add-files-button span {
+    font-size: 2rem;
   }
 </style>

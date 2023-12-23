@@ -24,27 +24,29 @@ try {
 ---
 
 <script define:vars={{ modalId, closeButtonId }}>
-document.getElementById(closeButtonId).onclick = () => {
-  document.getElementById(modalId).style.display = "none";
-};
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
+  document.getElementById(closeButtonId).onclick = () => {
     document.getElementById(modalId).style.display = "none";
-  }
-});
+  };
 
-document.addEventListener("click", (event) => {
-  if (event.target === document.getElementById(modalId)) {
-    document.getElementById(modalId).style.display = "none";
-  }
-});
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      document.getElementById(modalId).style.display = "none";
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target === document.getElementById(modalId)) {
+      document.getElementById(modalId).style.display = "none";
+    }
+  });
 </script>
 
 <div id={modalId} class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button id={closeButtonId} class="close">&times;</button>
+      <button id={closeButtonId} class="close" title="Close modal">
+        <span>&times;</span>
+      </button>
     </div>
 
     {!folders && <h2>No folders</h2>}
@@ -108,8 +110,23 @@ document.addEventListener("click", (event) => {
   }
 
   form {
-    color: var(--black);
-    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 400px;
+  }
+
+  label {
+    margin-left: 0.5rem;
+  }
+
+  input {
+    margin-bottom: 1rem;
+  }
+
+  .move-checkbox:checked + label {
+    font-weight: bold;
   }
 
   label,
@@ -117,15 +134,30 @@ document.addEventListener("click", (event) => {
     cursor: pointer;
   }
 
+  .move-checkbox {
+    margin-bottom: 1rem;
+    transform: scale(1.5);
+  }
+
   .move-button {
-    float: right;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: large;
+    cursor: pointer;
   }
 
   .close {
-    color: #aaa;
     float: right;
-    font-size: 28px;
-    font-weight: bold;
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .close span {
+    font-size: 2rem;
   }
   .close:hover,
   .close:focus {
