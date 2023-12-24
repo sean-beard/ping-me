@@ -59,8 +59,12 @@ const { file } = Astro.props;
   <file-viewer data-file={file.html}></file-viewer>
 </div>
 
-<style>
+<style is:inline>
   h2 {
     color: var(--black);
+  }
+
+  .toastui-editor-contents p {
+    font-size: large;
   }
 </style>
