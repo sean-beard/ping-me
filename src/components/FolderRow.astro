@@ -62,11 +62,24 @@ const { folderId, folderName, isEditing } = Astro.props;
   .edit-folder-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: var(--card-background);
     border-radius: 12px;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0;
     list-style: none;
+  }
+
+  .edit-folder-row button {
+    margin-left: 0.25rem;
+  }
+  .edit-folder-row label {
+    font-size: 15px;
+    width: 115px;
+  }
+
+  #folder-name {
+    min-width: 200px;
   }
 
   /* Mobile */

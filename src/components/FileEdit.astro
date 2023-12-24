@@ -12,7 +12,13 @@ const { file } = Astro.props;
   <div style="display: flex; justify-content: space-between;">
     <div style="display: flex;">
       <label for="file-name" style="margin-right: 1rem;">File name</label>
-      <input type="text" id="file-name" name="fileName" value={file.name} />
+      <input
+        type="text"
+        id="file-name"
+        name="fileName"
+        value={file.name}
+        style="max-width: 11rem;"
+      />
     </div>
 
     <button type="submit">Update</button>
@@ -21,9 +27,8 @@ const { file } = Astro.props;
   <br />
   <br />
 
-  <label for="file-body">Body</label>
-  <br />
-
+  <label for="file-body" style="display:block; margin-bottom: 1rem;">Body</label
+  >
   <div id="editor"></div>
   <input type="hidden" id="file-body" name="fileBody" value={file.html} />
 

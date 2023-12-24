@@ -7,7 +7,13 @@ import FileLayout from "@/layouts/FileLayout.astro";
     <div style="display: flex; justify-content: space-between;">
       <div style="display: flex;">
         <label for="file-name" style="margin-right: 1rem;">File name</label>
-        <input type="text" id="file-name" name="fileName" />
+        <input
+          type="text"
+          id="file-name"
+          name="fileName"
+          style="max-width: 11rem;"
+          autofocus
+        />
       </div>
 
       <button type="submit">Create</button>
@@ -16,7 +22,9 @@ import FileLayout from "@/layouts/FileLayout.astro";
     <br />
     <br />
 
-    <label for="file-body">Body</label>
+    <label for="file-body" style="display:block; margin-bottom: 1rem;"
+      >Body</label
+    >
     <file-editor></file-editor>
     <div id="editor"></div>
     <input type="hidden" id="file-body" name="fileBody" />
