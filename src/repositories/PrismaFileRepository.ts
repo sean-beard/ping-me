@@ -52,12 +52,14 @@ export class PrismaFileRepository {
   async createFile(
     file: Omit<File, "id" | "userId">,
     userId: number,
+    folderId?: string,
   ): Promise<File | null> {
     const newFile = await this.client.file.create({
       data: {
         name: file.name,
         html: file.html,
         user: { connect: { id: userId } },
+        folders: folderId ? { connect: { id: parseInt(folderId) } } : undefined,
       },
       select: { id: true, name: true, html: true, userId: true },
     });

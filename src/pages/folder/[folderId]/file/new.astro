@@ -1,8 +1,10 @@
 ---
 import NewFileForm from "@/components/NewFileForm.astro";
 import FileLayout from "@/layouts/FileLayout.astro";
+
+const { folderId } = Astro.params;
 ---
 
 <FileLayout title="New File | PingMe">
-  <NewFileForm />
+  <NewFileForm folderId={folderId} />
 </FileLayout>
