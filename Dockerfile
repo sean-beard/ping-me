@@ -29,7 +29,6 @@ RUN yarn install --frozen-lockfile --production=false
 # Generate Prisma Client
 COPY --link prisma .
 RUN npx prisma generate
-RUN npx prisma migrate
 
 # Copy application code
 COPY --link . .
