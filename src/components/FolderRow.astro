@@ -1,4 +1,6 @@
 ---
+import ButtonMenu from "./ButtonMenu.astro";
+
 interface Props {
   folderId: number;
   folderName: string;
@@ -36,25 +38,26 @@ const { folderId, folderName, isEditing } = Astro.props;
 
 {
   !isEditing && (
-    <li hx-swap="outerHTML" class="folder-row">
+    <li id={`folder-${folderId}-row`} hx-swap="outerHTML" class="folder-row">
       <a href={`/folder/${folderId}`}>{folderName}</a>
 
-      <div>
-        <button
-          class="edit-button"
-          hx-target="closest li"
-          hx-get={`/folder/${folderId}/edit`}
-        >
-          Edit
-        </button>
-        <button
-          hx-target="closest ul"
-          hx-delete={`/folder/${folderId}/delete`}
-          style="margin-left: 0.5rem"
-        >
-          Delete
-        </button>
-      </div>
+      <ButtonMenu
+        id={`folder-${folderId}-menu`}
+        items={[
+          {
+            label: "Edit",
+            url: `/folder/${folderId}/edit`,
+            verb: "GET",
+            target: `#folder-${folderId}-row`,
+          },
+          {
+            label: "Delete",
+            url: `/folder/${folderId}/delete`,
+            verb: "DELETE",
+            target: "#folder-list",
+          },
+        ]}
+      />
     </li>
   )
 }
@@ -88,10 +91,7 @@ const { folderId, folderName, isEditing } = Astro.props;
   @media (max-width: 37.5em) {
     .folder-row {
       width: 100%;
-    }
-
-    .edit-button {
-      display: none;
+      padding-right: 0.5rem;
     }
   }
 </style>

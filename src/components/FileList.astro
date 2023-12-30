@@ -1,5 +1,6 @@
 ---
 import type { File } from "@/services/types";
+import ButtonMenu from "./ButtonMenu.astro";
 
 interface Props {
   files: File[];
@@ -17,31 +18,30 @@ const { files, folderId } = Astro.props;
           <a href={`/file/${file.id}`}>{file.name}</a>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <button
-            hx-get={`/move/file/${file.id}`}
-            hx-target="#modal-container"
-            hx-swap="innerHTML"
-          >
-            Move
-          </button>
-          <div id="modal-container" />
-
-          <button
-            style={{ marginLeft: "0.5rem" }}
-            hx-delete={
-              folderId
+        <ButtonMenu
+          id={`file-${file.id}-menu`}
+          items={[
+            {
+              label: "Copy",
+              url: `/move/file/${file.id}`,
+              verb: "GET",
+              target: "#modal-container",
+              swap: "innerHTML",
+            },
+            {
+              label: "Delete",
+              url: folderId
                 ? `/folder/${folderId}/file/${file.id}.json`
-                : `/file/${file.id}/delete.json`
-            }
-          >
-            Delete
-          </button>
-        </div>
+                : `/file/${file.id}/delete.json`,
+              verb: "DELETE",
+            },
+          ]}
+        />
       </li>
     ))
   }
 </ul>
+<div id="modal-container"></div>
 
 <style>
   #file-list {
@@ -68,5 +68,12 @@ const { files, folderId } = Astro.props;
     max-width: 175px;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .file-row {
+      padding-right: 0.5rem;
+    }
   }
 </style>
