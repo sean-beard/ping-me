@@ -12,7 +12,7 @@ const user = getUser(Astro.cookies);
 
 if (!user) {
   console.error("User not found");
-  return Astro.redirect("/");
+  return Astro.redirect("/?nav=/file/" + fileId);
 }
 
 let file = null;

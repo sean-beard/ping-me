@@ -9,23 +9,16 @@ const { file } = Astro.props;
 ---
 
 <form hx-put={`/file/${file.id}/update`}>
-  <div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
-      <label for="file-name" style="margin-right: 1rem;">File name</label>
-      <input
-        type="text"
-        id="file-name"
-        name="fileName"
-        value={file.name}
-        style="max-width: 11rem;"
-      />
-    </div>
-
-    <button type="submit">Update</button>
+  <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+    <label for="file-name" style="margin-right: 1rem;">File name</label>
+    <input
+      type="text"
+      id="file-name"
+      name="fileName"
+      value={file.name}
+      style="max-width: 11rem;"
+    />
   </div>
-
-  <br />
-  <br />
 
   <label for="file-body" style="display:block; margin-bottom: 1rem;">Body</label
   >
@@ -33,4 +26,32 @@ const { file } = Astro.props;
   <input type="hidden" id="file-body" name="fileBody" value={file.html} />
 
   <file-editor data-file={file.html}></file-editor>
+
+  <div class="form-footer">
+    <button type="submit">Update</button>
+  </div>
 </form>
+
+<style is:inline>
+  .form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+
+  .form-footer button {
+    cursor: pointer;
+    height: 50px;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .form-footer {
+      justify-content: center;
+    }
+
+    .form-footer button {
+      width: 100%;
+    }
+  }
+</style>

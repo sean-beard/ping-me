@@ -146,15 +146,6 @@ const closeButtonId = "notification-preference-close-button";
 
     <button type="submit">Update</button>
   </form>
-
-  {/* TODO: remove this */}
-  <button
-    style="width: 160px; position: absolute;"
-    hx-post="/notification/send"
-    hx-swap="none"
-  >
-    Send notification
-  </button>
 </Modal>
 
 <style>
@@ -213,6 +204,11 @@ const closeButtonId = "notification-preference-close-button";
   /* Mobile */
   @media (max-width: 37.5em) {
     .notification-preference-form {
+      width: 100%;
+    }
+
+    .notification-preference-form input[type="date"],
+    .notification-preference-form input[type="time"] {
       width: 100%;
     }
   }

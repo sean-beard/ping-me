@@ -5,6 +5,8 @@ interface Props {
 }
 
 const { username, error }: Props = Astro.props;
+
+const navUrlParam = Astro.url.searchParams.get("nav");
 ---
 
 <script>
@@ -58,6 +60,8 @@ const { username, error }: Props = Astro.props;
 
   <label for="password">Password</label>
   <input type="password" name="password" id="password" required aria-required />
+
+  <input type="hidden" name="redirect" value={navUrlParam} />
 
   <button type="submit">
     <div id="loader" style="display: none;">

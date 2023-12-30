@@ -15,7 +15,7 @@ const { folderId, folderName, isEditing } = Astro.props;
       hx-get={`/folder/${folderId}`}
       class="edit-folder-row"
     >
-      <label for="folder-name">Folder name</label>
+      <label for="folder-name">Name</label>
       <input
         type="text"
         id="folder-name"
@@ -74,12 +74,12 @@ const { folderId, folderName, isEditing } = Astro.props;
     margin-left: 0.25rem;
   }
   .edit-folder-row label {
-    font-size: 15px;
-    width: 115px;
+    margin-right: 0.5rem;
   }
 
-  #folder-name {
-    min-width: 200px;
+  .edit-folder-row input {
+    margin-right: 0.5rem;
+    max-width: 200px;
   }
 
   /* Mobile */

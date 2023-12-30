@@ -24,7 +24,11 @@ export const isAuthenticated = (cookies: AstroCookies): boolean => {
   return !!user;
 };
 
-export const signIn = (user: User, cookies: AstroCookies) => {
+export const signIn = (
+  user: User,
+  cookies: AstroCookies,
+  redirect: string = "/",
+) => {
   const JWT_OPTIONS: jwt.SignOptions = { expiresIn: "7d" };
   const userJwt = jwt.sign(user, import.meta.env.SECRET_JWT_KEY, JWT_OPTIONS);
 
@@ -32,6 +36,6 @@ export const signIn = (user: User, cookies: AstroCookies) => {
 
   return new Response(JSON.stringify(user), {
     status: 200,
-    headers: { ["HX-Redirect"]: "/" },
+    headers: { ["HX-Redirect"]: redirect },
   });
 };

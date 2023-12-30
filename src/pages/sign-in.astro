@@ -25,6 +25,7 @@ let errorMessage = "";
 const body = await Astro.request.formData();
 const username = body.get("username")?.toString();
 const password = body.get("password")?.toString();
+const redirect = body.get("redirect")?.toString();
 
 if (!username || !password) {
   errorMessage = "Username and password are required";
@@ -35,7 +36,7 @@ if (!username || !password) {
     if (!user) {
       errorMessage = "User not found";
     } else {
-      return signIn(user, Astro.cookies);
+      return signIn(user, Astro.cookies, redirect);
     }
   } catch (error) {
     errorMessage = getErrorMessage(error);
