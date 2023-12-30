@@ -12,7 +12,7 @@ export class PrismaFolderRepository {
     try {
       const folders = await this.client.folder.findMany({
         select: { id: true, name: true, userId: true },
-        where: { userId },
+        where: { userId, isArchived: false },
         orderBy: { id: "desc" },
       });
 
@@ -24,8 +24,8 @@ export class PrismaFolderRepository {
   }
 
   async getFolder(id: number) {
-    const folder = await this.client.folder.findUnique({
-      where: { id },
+    const folder = await this.client.folder.findFirst({
+      where: { id, isArchived: false },
       select: { id: true, name: true, userId: true },
     });
 
@@ -69,9 +69,9 @@ export class PrismaFolderRepository {
 
   async deleteFolder(id: number): Promise<number | null> {
     try {
-      // TODO: cascade delete
-      const folder = await this.client.folder.delete({
+      const folder = await this.client.folder.update({
         where: { id },
+        data: { isArchived: true },
         select: { id: true },
       });
 
