@@ -15,19 +15,21 @@ const { folderId, folderName, isEditing } = Astro.props;
       hx-get={`/folder/${folderId}`}
       class="edit-folder-row"
     >
-      <label for="folder-name">Name</label>
-      <input
-        type="text"
-        id="folder-name"
-        name="folderName"
-        value={folderName}
-      />
+      <form hx-put={`/folder/${folderId}/update`} hx-include="closest li">
+        <label for="folder-name">Name</label>
+        <input
+          type="text"
+          id="folder-name"
+          name="folderName"
+          value={folderName}
+        />
 
-      <button hx-get={`/folder/${folderId}/row`}>Cancel</button>
+        <button hx-get={`/folder/${folderId}/row`} type="button">
+          Cancel
+        </button>
 
-      <button hx-put={`/folder/${folderId}/update`} hx-include="closest li">
-        Save
-      </button>
+        <button type="submit">Save</button>
+      </form>
     </li>
   )
 }
