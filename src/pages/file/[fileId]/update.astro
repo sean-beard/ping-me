@@ -4,6 +4,8 @@ import { isAuthenticated } from "@/utils/auth";
 import { fileService } from "@/services";
 import FileEdit from "@/components/FileEdit.astro";
 
+export const partial = true;
+
 let error = "";
 let updatedFile = null;
 

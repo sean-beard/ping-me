@@ -91,7 +91,7 @@ const { files, folderId } = Astro.props;
   <ul class="file-list">
     {
       files.map((file) => (
-        <li id={file.id.toString()} class="file-row">
+        <li id={"folder-" + file.id.toString()} class="file-row">
           <div class="file-name">
             <a href={`/file/${file.id}`}>{file.name}</a>
           </div>

@@ -3,6 +3,8 @@ import FileEdit from "@/components/FileEdit.astro";
 import { fileService } from "@/services";
 import { getUser, isAuthenticated } from "@/utils/auth";
 
+export const partial = true;
+
 const cookies = Astro.cookies;
 
 if (!isAuthenticated(cookies)) {

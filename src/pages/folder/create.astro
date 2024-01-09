@@ -4,6 +4,8 @@ import NewFolderButton from "@/components/NewFolderButton.astro";
 import { getUser, isAuthenticated } from "@/utils/auth";
 import { folderService } from "@/services";
 
+export const partial = true;
+
 const cookies = Astro.cookies;
 
 if (!isAuthenticated(cookies)) {
