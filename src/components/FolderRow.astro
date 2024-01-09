@@ -18,19 +18,26 @@ const { folderId, folderName, isEditing } = Astro.props;
       class="edit-folder-row"
     >
       <form hx-put={`/folder/${folderId}/update`} hx-include="closest li">
-        <label for="folder-name">Name</label>
         <input
           type="text"
           id="folder-name"
           name="folderName"
           value={folderName}
+          aria-label="Folder name"
         />
 
-        <button hx-get={`/folder/${folderId}/row`} type="button">
-          Cancel
+        <button
+          class="cancel-button"
+          hx-get={`/folder/${folderId}/row`}
+          type="button"
+          title="Cancel"
+        >
+          <span>&times;</span>
         </button>
 
-        <button type="submit">Save</button>
+        <button class="save-button" type="submit" title="Save folder name">
+          <span>✅</span>
+        </button>
       </form>
     </li>
   )
@@ -66,7 +73,6 @@ const { folderId, folderName, isEditing } = Astro.props;
   .folder-row,
   .edit-folder-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background-color: var(--card-background);
     border-radius: 12px;
@@ -75,16 +81,47 @@ const { folderId, folderName, isEditing } = Astro.props;
     list-style: none;
   }
 
+  .folder-row {
+    justify-content: space-between;
+  }
+
+  .edit-folder-row form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
   .edit-folder-row button {
     margin-left: 0.25rem;
+    width: 45px;
+    height: 45px;
   }
+
+  .save-button {
+    font-size: larger;
+  }
+
+  .cancel-button span {
+    position: relative;
+    top: -0.1rem;
+    font-size: 2rem;
+  }
+
+  .cancel-button,
+  .save-button {
+    background-color: transparent;
+    border: none;
+  }
+
   .edit-folder-row label {
     margin-right: 0.5rem;
   }
 
   .edit-folder-row input {
-    margin-right: 0.5rem;
-    max-width: 200px;
+    flex: 1;
+    min-width: 0;
+    padding: 0.25rem;
   }
 
   /* Mobile */
