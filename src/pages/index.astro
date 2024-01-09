@@ -22,6 +22,8 @@ if (userIsAuthenticated) {
     files = await fileService.getFiles(user.id);
   }
 }
+
+const fileCount = files?.length ? `(${files.length})` : "";
 ---
 
 <Layout title="Home | PingMe">
@@ -46,7 +48,7 @@ if (userIsAuthenticated) {
       <>
         <section>
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2>Files</h2>
+            <h2>Files {fileCount}</h2>
 
             <a href="/file/new" title="Create file">
               <span>➕</span>
