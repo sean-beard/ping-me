@@ -17,6 +17,8 @@ const { file } = Astro.props;
       name="fileName"
       value={file.name}
       style="max-width: 11rem;"
+      autofocus
+      onfocus="var temp_value=this.value; this.value=''; this.value=temp_value"
     />
   </div>
 
