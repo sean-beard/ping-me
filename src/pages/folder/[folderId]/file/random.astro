@@ -1,6 +1,8 @@
 ---
 import { folderService } from "@/services";
 
+export const partial = true;
+
 const folderId = Astro.params.folderId;
 
 if (!folderId || isNaN(Number(folderId))) {

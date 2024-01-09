@@ -4,6 +4,8 @@ import { folderService } from "@/services";
 import type { Folder } from "@/services/types";
 import { getUser } from "@/utils/auth";
 
+export const partial = true;
+
 const { folderId } = Astro.params;
 
 const folderIdNum = Number(folderId);
