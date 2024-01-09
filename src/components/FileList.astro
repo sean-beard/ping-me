@@ -10,7 +10,7 @@ interface Props {
 const { files, folderId } = Astro.props;
 ---
 
-<ul id="file-list">
+<ul class="file-list">
   {
     files.map((file) => (
       <li class="file-row">
@@ -44,7 +44,7 @@ const { files, folderId } = Astro.props;
 <div id="modal-container"></div>
 
 <style>
-  #file-list {
+  .file-list {
     list-style: none;
     padding: 0;
     display: grid;
@@ -72,6 +72,10 @@ const { files, folderId } = Astro.props;
 
   /* Mobile */
   @media (max-width: 37.5em) {
+    .file-list {
+      grid-template-columns: repeat(auto-fill, 100%);
+    }
+
     .file-row {
       padding-right: 0.5rem;
     }
