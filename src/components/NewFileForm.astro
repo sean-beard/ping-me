@@ -6,22 +6,13 @@ interface Props {
 const { folderId } = Astro.props;
 ---
 
-<form hx-post="/file.json">
+<form class="file-edit-form" hx-post="/file.json">
   {folderId && <input type="hidden" name="folderId" value={folderId} />}
 
-  <div style="display: flex;">
+  <div class="file-edit-input-group">
     <label for="file-name" style="margin-right: 1rem;">File name</label>
-    <input
-      type="text"
-      id="file-name"
-      name="fileName"
-      style="max-width: 11rem;"
-      autofocus
-    />
+    <input type="text" id="file-name" name="fileName" autofocus required />
   </div>
-
-  <br />
-  <br />
 
   <label for="file-body" style="display:block; margin-bottom: 1rem;">Body</label
   >
@@ -30,21 +21,41 @@ const { folderId } = Astro.props;
   <input type="hidden" id="file-body" name="fileBody" />
 
   <div class="form-footer">
-    <button type="submit">Create</button>
+    <button class="primary-button" type="submit">Create</button>
   </div>
 </form>
 
 <style>
+  .file-edit-form {
+    container-type: inline-size;
+  }
+
+  .file-edit-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .file-edit-input-group input {
+    min-width: 0;
+    max-width: 300px;
+  }
+
   .form-footer {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
   }
 
-  .form-footer button {
-    cursor: pointer;
-    height: 50px;
-    min-width: 125px;
+  @container (max-width: 350px) {
+    .file-edit-input-group {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .file-edit-input-group label {
+      margin-bottom: 0.5rem;
+    }
   }
 
   /* Mobile */

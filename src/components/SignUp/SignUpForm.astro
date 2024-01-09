@@ -59,7 +59,7 @@ const { username, error }: Props = Astro.props;
   <label for="password">Password</label>
   <input type="password" name="password" id="password" required aria-required />
 
-  <button type="submit">
+  <button class="primary-button" type="submit">
     <div id="loader" style="display: none;">
       <i class="loading-spinner"></i>
       <i class="loading-spinner"></i>
@@ -85,14 +85,8 @@ const { username, error }: Props = Astro.props;
     }
 
     button {
-      display: block;
       width: 100%;
-      padding: 0.5rem;
-      border: 1px solid var(--black);
-      border-radius: 0.5rem;
       margin-bottom: 1rem;
-      background-color: var(--black);
-      color: white;
     }
 
     .error {

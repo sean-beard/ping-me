@@ -29,7 +29,10 @@ try {
   <div class="modal-body">
     {!files && <h2>No files</h2>}
 
-    <a href={`/folder/${folderId}/file/new`}>Create a new file</a>
+    <a
+      href={`/folder/${folderId}/file/new`}
+      style="display: block; margin-bottom: 2rem;">Create a new file</a
+    >
 
     <h2 style="font-size: large; font-weight: normal;">Copy existing files:</h2>
     {
@@ -41,7 +44,7 @@ try {
         >
           <div style="margin-bottom: 1rem;">
             {files.map((file) => (
-              <div>
+              <div class="checkbox-row">
                 <input
                   class="move-checkbox"
                   type="checkbox"
@@ -54,7 +57,7 @@ try {
             ))}
           </div>
 
-          <button type="submit" class="move-button">
+          <button class="primary-button" type="submit">
             Move
           </button>
         </form>
@@ -99,10 +102,9 @@ try {
     transform: scale(1.5);
   }
 
-  .move-button {
-    margin-top: 1rem;
-    padding: 0.5rem;
-    font-size: large;
+  .checkbox-row {
+    display: flex;
+    margin-bottom: 1rem;
   }
 
   /* Mobile */

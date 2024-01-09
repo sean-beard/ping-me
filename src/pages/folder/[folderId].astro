@@ -50,6 +50,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
               hx-target="#modal-container"
               hx-swap="innerHTML"
               title="Notification preferences"
+              aria-label="Notification preferences"
             >
               <span>🛎️</span>
             </button>
@@ -67,6 +68,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
               hx-target="#modal"
               hx-swap="innerHTML"
               title="Add files"
+              aria-label="Add files"
             >
               <span>➕</span>
             </button>
@@ -74,14 +76,9 @@ const fileCount = files?.length ? `(${files.length})` : "";
           <div id="modal" />
 
           {!!files?.length && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "2rem",
-              }}
-            >
+            <div class="random-file-container">
               <button
+                class="primary-button"
                 hx-get={`/folder/${folder?.id}/file/random`}
                 hx-target="#random-file-name"
                 hx-swap="innerHTML"
@@ -89,7 +86,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
                 Get random file
               </button>
 
-              <div id="random-file-name" style="margin-left: 1rem;" />
+              <div id="random-file-name" />
             </div>
           )}
 
@@ -101,6 +98,20 @@ const fileCount = files?.length ? `(${files.length})` : "";
 </Layout>
 
 <style>
+  .random-file-container {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+  }
+
+  #random-file-name {
+    margin-left: 1rem;
+  }
+
+  .random-file-container button {
+    min-width: fit-content;
+  }
+
   h2,
   h3 {
     color: var(--black);
@@ -134,5 +145,21 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
   .notification-preference-button span {
     font-size: 2rem;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .random-file-container {
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .random-file-container button {
+      margin-bottom: 1rem;
+    }
+
+    #random-file-name {
+      margin-left: 0;
+    }
   }
 </style>
