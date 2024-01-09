@@ -31,6 +31,8 @@ const data = await Promise.all([
 
 folder = data[0];
 files = data[1];
+
+const fileCount = files?.length ? `(${files.length})` : "";
 ---
 
 <Layout title="Folder | PingMe">
@@ -57,7 +59,7 @@ files = data[1];
 
         <section>
           <div style="display: flex; justify-content: space-between;">
-            <h3>Files</h3>
+            <h3>Files {fileCount}</h3>
 
             <button
               class="add-files-button"
