@@ -24,6 +24,8 @@ const { folderId, folderName, isEditing } = Astro.props;
           name="folderName"
           value={folderName}
           aria-label="Folder name"
+          autofocus
+          onfocus="var temp_value=this.value; this.value=''; this.value=temp_value"
         />
 
         <button
