@@ -30,7 +30,7 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
 
   const response = new Response(null, { status: 201 });
 
-  response.headers.set("HX-Refresh", "true");
+  response.headers.set("HX-Redirect", "/?expandFiles=true");
 
   return response;
 };

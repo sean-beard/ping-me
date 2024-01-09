@@ -91,7 +91,7 @@ const { files, folderId } = Astro.props;
   <ul class="file-list">
     {
       files.map((file) => (
-        <li class="file-row">
+        <li id={file.id.toString()} class="file-row">
           <div class="file-name">
             <a href={`/file/${file.id}`}>{file.name}</a>
           </div>
@@ -109,9 +109,11 @@ const { files, folderId } = Astro.props;
               {
                 label: "Delete",
                 url: folderId
-                  ? `/folder/${folderId}/file/${file.id}.json`
-                  : `/file/${file.id}/delete.json`,
-                verb: "DELETE",
+                  ? `/folder/${folderId}/file/${file.id}/delete/confirm`
+                  : `/file/${file.id}/delete/confirm`,
+                verb: "GET",
+                target: "#modal-container",
+                swap: "innerHTML",
               },
             ]}
           />
@@ -119,8 +121,6 @@ const { files, folderId } = Astro.props;
       ))
     }
   </ul>
-
-  <div id="modal-container"></div>
 </div>
 
 <style>

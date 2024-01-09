@@ -5,11 +5,10 @@ import FolderList from "@/components/FolderList.astro";
 import NewFolderButton from "@/components/NewFolderButton.astro";
 import SignIn from "@/components/SignIn/index.astro";
 import Layout from "@/layouts/Layout.astro";
-import { fileService, folderService } from "@/services";
+import { folderService } from "@/services";
 import { getUser, isAuthenticated } from "@/utils/auth";
 
 let folders = null;
-let files = null;
 let user = null;
 
 const userIsAuthenticated = isAuthenticated(Astro.cookies);
@@ -19,9 +18,10 @@ if (userIsAuthenticated) {
 
   if (user) {
     folders = await folderService.getFolders(user.id);
-    files = await fileService.getFiles(user.id);
   }
 }
+
+const expandFiles = Astro.url.searchParams.get("expandFiles") == "true";
 ---
 
 <Layout title="Home | PingMe">
@@ -50,9 +50,9 @@ if (userIsAuthenticated) {
   }
 
   {
-    userIsAuthenticated && (
+    user?.id && userIsAuthenticated && (
       <section style="margin-bottom: 3rem;">
-        <Files files={files} />
+        <Files userId={user.id} isExpanded={expandFiles} />
       </section>
     )
   }

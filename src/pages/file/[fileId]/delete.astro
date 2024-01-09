@@ -1,0 +1,30 @@
+---
+import { fileService } from "@/services";
+import { isAuthenticated } from "@/utils/auth";
+
+if (!isAuthenticated(Astro.cookies)) {
+  return new Response(null, {
+    status: 400,
+    statusText: "Invalid Authorization header.",
+  });
+}
+
+const fileId = Astro.params.fileId;
+
+if (!fileId || isNaN(Number(fileId))) {
+  return new Response(JSON.stringify({ error: "File ID is required" }), {
+    status: 400,
+  });
+}
+
+const deletedFileId = await fileService.deleteFile(Number(fileId));
+
+if (!deletedFileId) {
+  return new Response(
+    JSON.stringify({ error: "Error deleting file with ID: " + fileId }),
+    { status: 500 },
+  );
+}
+---
+
+<div></div>
