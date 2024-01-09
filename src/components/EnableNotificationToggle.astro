@@ -51,6 +51,10 @@ try {
           toggleInput.removeAttribute("checked");
         }
 
+        if (!toggleInput.hasAttribute("checked")) {
+          alert("You must grant permission to receive notifications.");
+        }
+
         this.setNotificationChangeListener(toggleInput);
         this.setToggleChangeListener(toggleInput, Number(userId));
       }
@@ -74,7 +78,9 @@ try {
         const enabled = (e.target as HTMLInputElement | null)?.checked;
 
         if (enabled === null) {
-          console.error("Error: attempted to set notifications enabled to null");
+          console.error(
+            "Error: attempted to set notifications enabled to null",
+          );
           return;
         }
 
