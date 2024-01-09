@@ -20,8 +20,6 @@ if (userIsAuthenticated) {
     folders = await folderService.getFolders(user.id);
   }
 }
-
-const expandFiles = Astro.url.searchParams.get("expandFiles") == "true";
 ---
 
 <Layout title="Home | PingMe">
@@ -52,7 +50,7 @@ const expandFiles = Astro.url.searchParams.get("expandFiles") == "true";
   {
     user?.id && userIsAuthenticated && (
       <section style="margin-bottom: 3rem;">
-        <Files userId={user.id} isExpanded={expandFiles} />
+        <Files userId={user.id} />
       </section>
     )
   }

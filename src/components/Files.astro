@@ -4,15 +4,13 @@ import { fileService } from "@/services";
 
 interface Props {
   userId: number;
-  isExpanded?: boolean;
 }
 
-const { userId, isExpanded } = Astro.props;
+const { userId } = Astro.props;
 
 const files = await fileService.getFiles(userId);
 
 const fileCount = files?.length ? `(${files.length})` : "";
-const ariaExpanded = isExpanded ? "true" : "false";
 ---
 
 <script>
@@ -54,7 +52,7 @@ const ariaExpanded = isExpanded ? "true" : "false";
       class="accordian-button"
       type="button"
       aria-label="Toggle file list"
-      aria-expanded={ariaExpanded}
+      aria-expanded="true"
     >
       <span style="font-size: 3.5rem; color: var(--black);">&rsaquo;</span>
     </button>
@@ -66,7 +64,7 @@ const ariaExpanded = isExpanded ? "true" : "false";
 
   {
     files && (
-      <div class={`file-list ${isExpanded ? "" : "hidden"}`}>
+      <div class="file-list">
         <FileList files={files} />{" "}
       </div>
     )
