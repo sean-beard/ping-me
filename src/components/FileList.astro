@@ -10,38 +10,118 @@ interface Props {
 const { files, folderId } = Astro.props;
 ---
 
-<ul class="file-list">
-  {
-    files.map((file) => (
-      <li class="file-row">
-        <div class="file-name">
-          <a href={`/file/${file.id}`}>{file.name}</a>
-        </div>
+<script>
+  const searchForm = document.querySelector<HTMLFormElement>("search form");
 
-        <ButtonMenu
-          id={`file-${file.id}-menu`}
-          items={[
-            {
-              label: "Copy",
-              url: `/move/file/${file.id}`,
-              verb: "GET",
-              target: "#modal-container",
-              swap: "innerHTML",
-            },
-            {
-              label: "Delete",
-              url: folderId
-                ? `/folder/${folderId}/file/${file.id}.json`
-                : `/file/${file.id}/delete.json`,
-              verb: "DELETE",
-            },
-          ]}
-        />
-      </li>
-    ))
+  searchForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+
+  const searchInput = document.querySelector<HTMLInputElement>("search input");
+
+  if (!searchInput) {
+    throw new Error("Search input not found");
   }
-</ul>
-<div id="modal-container"></div>
+
+  const filterRows = (searchValue: string) => {
+    const fileRows = document.querySelectorAll<HTMLDivElement>(".file-row");
+
+    if (!fileRows) {
+      throw new Error("File rows not found");
+    }
+
+    const fileList = document.querySelector<HTMLUListElement>(".file-list");
+
+    const fileListHeight = fileList?.offsetHeight;
+
+    // Prevent the scroll position from jumping when the rows are hidden/shown
+    if (fileListHeight) {
+      fileList.style.height = fileListHeight + "px";
+    }
+
+    fileRows.forEach((row) => {
+      const fileNameElement = row.querySelector(".file-name");
+
+      if (!fileNameElement) {
+        throw new Error("File name element not found");
+      }
+
+      const fileName = fileNameElement.textContent?.toLowerCase() ?? "";
+
+      if (fileName.includes(searchValue)) {
+        row.style.display = "flex";
+      } else {
+        row.style.display = "none";
+      }
+    });
+
+    // Without this the container will be too large when there are lots of files
+    if (fileListHeight && fileListHeight > window.innerHeight) {
+      fileList.style.height = "70vh";
+    }
+  };
+
+  if (searchInput.value) {
+    filterRows(searchInput.value.toLowerCase());
+  }
+
+  searchInput.addEventListener("keyup", (event) => {
+    const searchInputElement = event.target as HTMLInputElement;
+    const searchValue = searchInputElement.value.toLowerCase();
+
+    filterRows(searchValue);
+
+    if (!searchValue) {
+      const fileList = document.querySelector<HTMLUListElement>(".file-list");
+      if (fileList) {
+        fileList.style.height = "auto";
+      }
+    }
+  });
+</script>
+
+<div style="padding: 1rem 0;">
+  <search>
+    <form>
+      <label for="search" style="margin-right: 1rem;">Search</label>
+      <input type="search" id="search" name="search" />
+    </form>
+  </search>
+
+  <ul class="file-list">
+    {
+      files.map((file) => (
+        <li class="file-row">
+          <div class="file-name">
+            <a href={`/file/${file.id}`}>{file.name}</a>
+          </div>
+
+          <ButtonMenu
+            id={`file-${file.id}-menu`}
+            items={[
+              {
+                label: "Copy",
+                url: `/move/file/${file.id}`,
+                verb: "GET",
+                target: "#modal-container",
+                swap: "innerHTML",
+              },
+              {
+                label: "Delete",
+                url: folderId
+                  ? `/folder/${folderId}/file/${file.id}.json`
+                  : `/file/${file.id}/delete.json`,
+                verb: "DELETE",
+              },
+            ]}
+          />
+        </li>
+      ))
+    }
+  </ul>
+
+  <div id="modal-container"></div>
+</div>
 
 <style>
   .file-list {
@@ -50,6 +130,7 @@ const { files, folderId } = Astro.props;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 0.25fr));
     grid-gap: 1rem;
+    grid-auto-rows: min-content;
   }
 
   .file-row {
@@ -58,20 +139,29 @@ const { files, folderId } = Astro.props;
     align-items: center;
     background-color: var(--card-background);
     box-shadow: var(--shadow);
-    border-radius: 12px;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0;
     list-style: none;
+    height: fit-content;
   }
 
   .file-name {
-    max-width: 175px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /* Mobile */
   @media (max-width: 37.5em) {
+    search label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    search input {
+      width: 100%;
+    }
+
     .file-list {
       grid-template-columns: repeat(auto-fill, 100%);
     }
