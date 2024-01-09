@@ -1,0 +1,60 @@
+---
+import Modal from "@/components/Modal.astro";
+
+interface Props {
+  id: string;
+  confirmUrl: string;
+  confirmTarget?: string;
+  confirmVerb?: "GET" | "DELETE";
+}
+
+const { id, confirmUrl, confirmTarget, confirmVerb } = Astro.props;
+
+const deleteButtonId = `delete-${id}-button`;
+---
+
+<script define:vars={{ deleteButtonId }}>
+  setTimeout(() => {
+    const confirmButton = document.getElementById(deleteButtonId);
+
+    if (!confirmButton) {
+      console.log("confirm button element not found");
+    }
+
+    confirmButton?.addEventListener("click", () => {
+      const modalContainer = document.getElementById("modal-container");
+
+      if (!modalContainer) {
+        console.log("modal container element not found");
+        return;
+      }
+
+      modalContainer.innerHTML = "";
+    });
+  }, 0);
+</script>
+
+<Modal
+  modalId={`${id}-confirm-modal`}
+  closeButtonId={`${id}-confirm-modal-close`}
+>
+  <h2>You sure about that?</h2>
+
+  <div style="flex: 1;"></div>
+
+  <div style="display: flex; justify-content: flex-end;">
+    <button
+      id={deleteButtonId}
+      type="button"
+      class="primary-button"
+      hx-delete={!confirmVerb || confirmVerb === "DELETE"
+        ? confirmUrl
+        : undefined}
+      hx-get={confirmVerb === "GET" ? confirmUrl : undefined}
+      hx-target={confirmTarget}
+      hx-swap="outerHTML"
+    >
+      Delete
+    </button>
+  </div>
+</Modal>

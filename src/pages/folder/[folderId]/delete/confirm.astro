@@ -1,0 +1,11 @@
+---
+import DeleteConfirmModal from "@/components/DeleteConfirmModal.astro";
+
+const { folderId } = Astro.params;
+---
+
+<DeleteConfirmModal
+  id={`${folderId}-delete`}
+  confirmUrl={`/folder/${folderId}/delete`}
+  confirmTarget="#folder-list"
+/>

@@ -61,9 +61,10 @@ const { folderId, folderName, isEditing } = Astro.props;
           },
           {
             label: "Delete",
-            url: `/folder/${folderId}/delete`,
-            verb: "DELETE",
-            target: "#folder-list",
+            url: `/folder/${folderId}/delete/confirm`,
+            verb: "GET",
+            target: "#modal-container",
+            swap: "innerHTML",
           },
         ]}
       />

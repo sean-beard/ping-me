@@ -49,6 +49,7 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
       <Navigation userIsAuthenticated={userIsAuthenticated} />
     </header>
     <main>
+      <div id="modal-container"></div>
       <slot />
     </main>
   </body>
