@@ -1,0 +1,112 @@
+---
+import FileList from "@/components/FileList.astro";
+import type { File } from "@/services/types";
+
+interface Props {
+  files: File[] | null;
+}
+
+const { files } = Astro.props;
+
+const fileCount = files?.length ? `(${files.length})` : "";
+---
+
+<script>
+  function toggleFileList() {
+    const fileList = document.querySelector<HTMLDivElement>(".file-list");
+    const button = document.querySelector(".accordian-button");
+
+    if (!fileList || !button) return;
+
+    if (fileList.classList.contains("hidden")) {
+      fileList.classList.remove("hidden");
+      button.setAttribute("aria-expanded", "true");
+
+      const header = document.querySelector("header");
+      const container = document.querySelector<HTMLDivElement>(".container");
+
+      if (!header || !container) return;
+
+      container.style.scrollMarginTop = `${header.offsetHeight + 16}px`;
+      container.scrollIntoView({ behavior: "smooth" });
+    } else {
+      fileList.classList.add("hidden");
+      button.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const button = document.querySelector(".accordian-button");
+
+    button?.addEventListener("click", toggleFileList);
+  });
+</script>
+
+<>
+  <div class="container">
+    <h2>Files {fileCount}</h2>
+
+    <button
+      class="accordian-button"
+      type="button"
+      aria-label="Toggle file list"
+      aria-expanded="false"
+    >
+      <span style="font-size: 3.5rem; color: var(--black);">&rsaquo;</span>
+    </button>
+
+    <a href="/file/new" title="Create file">
+      <span>➕</span>
+    </a>
+  </div>
+
+  {
+    files && (
+      <div class="file-list hidden">
+        <FileList files={files} />{" "}
+      </div>
+    )
+  }
+</>
+
+<style>
+  a {
+    text-decoration: none;
+  }
+
+  a span {
+    font-size: 2rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .accordian-button {
+    flex: 1;
+    background: none;
+    border: none;
+    height: 100%;
+    font-size: 2rem;
+    padding: 0;
+  }
+
+  .accordian-button[aria-expanded="true"] span {
+    transform: rotate(90deg);
+  }
+
+  .accordian-button[aria-expanded="false"] span {
+    transform: rotate(-90deg);
+  }
+
+  .accordian-button span {
+    display: inline-block;
+    transition: transform 0.2s ease-in-out;
+  }
+</style>
