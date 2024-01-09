@@ -26,39 +26,48 @@ try {
 ---
 
 <Modal modalId={modalId} closeButtonId={closeButtonId}>
-  {!files && <h2>No files</h2>}
+  <div class="modal-body">
+    {!files && <h2>No files</h2>}
 
-  {
-    files && (
-      <form
-        class="move-form"
-        hx-post={`/folder/${folderId}/move/files.json`}
-        target={`#${modalId}`}
-      >
-        <div style="margin-bottom: 1rem;">
-          {files.map((file) => (
-            <div>
-              <input
-                class="move-checkbox"
-                type="checkbox"
-                id={file.id.toString()}
-                name="fileIds"
-                value={file.id}
-              />
-              <label for={file.id.toString()}>{file.name}</label>
-            </div>
-          ))}
-        </div>
+    <a href={`/folder/${folderId}/file/new`}>Create a new file</a>
 
-        <button type="submit" class="move-button">
-          Move
-        </button>
-      </form>
-    )
-  }
+    <h2 style="font-size: large; font-weight: normal;">Copy existing files:</h2>
+    {
+      files && (
+        <form
+          class="move-form"
+          hx-post={`/folder/${folderId}/move/files.json`}
+          target={`#${modalId}`}
+        >
+          <div style="margin-bottom: 1rem;">
+            {files.map((file) => (
+              <div>
+                <input
+                  class="move-checkbox"
+                  type="checkbox"
+                  id={file.id.toString()}
+                  name="fileIds"
+                  value={file.id}
+                />
+                <label for={file.id.toString()}>{file.name}</label>
+              </div>
+            ))}
+          </div>
+
+          <button type="submit" class="move-button">
+            Move
+          </button>
+        </form>
+      )
+    }
+  </div>
 </Modal>
 
 <style is:inline>
+  .modal-body {
+    padding: 0 3rem;
+  }
+
   .move-form {
     display: flex;
     flex-direction: column;
@@ -66,7 +75,6 @@ try {
     flex: 1;
     min-width: 300px;
     max-width: 400px;
-    margin: 0 auto;
   }
 
   label {
@@ -95,5 +103,12 @@ try {
     margin-top: 1rem;
     padding: 0.5rem;
     font-size: large;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .modal-body {
+      padding: 0;
+    }
   }
 </style>

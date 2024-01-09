@@ -45,8 +45,13 @@ export class FileService {
   async createFile(
     file: Omit<File, "id" | "userId">,
     userId: number,
+    folderId?: string,
   ): Promise<File | null> {
-    const newFile = await this.fileRepository.createFile(file, userId);
+    const newFile = await this.fileRepository.createFile(
+      file,
+      userId,
+      folderId,
+    );
 
     return newFile;
   }

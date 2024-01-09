@@ -15,6 +15,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const fileName = body.get("fileName");
   const fileBody = body.get("fileBody");
+  const folderId = body.get("folderId");
 
   if (!fileName) {
     return new Response(
@@ -38,7 +39,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const createdFile = await fileService.createFile(file, user.id);
+  const createdFile = await fileService.createFile(
+    file,
+    user.id,
+    folderId?.toString(),
+  );
 
   const fileId = createdFile?.id;
 
