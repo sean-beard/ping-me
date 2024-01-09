@@ -9,19 +9,14 @@ const { folderId } = Astro.props;
 <form hx-post="/file.json">
   {folderId && <input type="hidden" name="folderId" value={folderId} />}
 
-  <div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
-      <label for="file-name" style="margin-right: 1rem;">File name</label>
-      <input
-        type="text"
-        id="file-name"
-        name="fileName"
-        style="max-width: 11rem;"
-        autofocus
-      />
-    </div>
-
-    <button type="submit">Create</button>
+  <div style="display: flex;">
+    <label for="file-name" style="margin-right: 1rem;">File name</label>
+    <input
+      type="text"
+      id="file-name"
+      name="fileName"
+      style="max-width: 11rem;"
+    />
   </div>
 
   <br />
@@ -32,4 +27,33 @@ const { folderId } = Astro.props;
   <file-editor></file-editor>
   <div id="editor"></div>
   <input type="hidden" id="file-body" name="fileBody" />
+
+  <div class="form-footer">
+    <button type="submit">Create</button>
+  </div>
 </form>
+
+<style>
+  .form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+
+  .form-footer button {
+    cursor: pointer;
+    height: 50px;
+    min-width: 125px;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .form-footer {
+      justify-content: center;
+    }
+
+    .form-footer button {
+      width: 100%;
+    }
+  }
+</style>
