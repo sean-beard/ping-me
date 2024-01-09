@@ -1,0 +1,26 @@
+---
+interface Props {
+  userIsAuthenticated: boolean;
+}
+
+const { userIsAuthenticated } = Astro.props;
+---
+
+<nav>
+  <ul style="list-style: none;">
+    {
+      userIsAuthenticated && (
+        <li>
+          <button
+            class="primary-button"
+            hx-post="/logout.json"
+            hx-target="this"
+            hx-swap="outerHTML"
+          >
+            Logout
+          </button>
+        </li>
+      )
+    }
+  </ul>
+</nav>
