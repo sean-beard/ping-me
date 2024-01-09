@@ -30,6 +30,14 @@ const fileCount = files?.length ? `(${files.length})` : "";
   {!userIsAuthenticated && <SignIn />}
 
   {
+    userIsAuthenticated && user && (
+      <div style="display: flex; justify-content: center; margin-bottom: 2rem">
+        <EnableNotificationToggle userId={user.id} />
+      </div>
+    )
+  }
+
+  {
     userIsAuthenticated && folders && (
       <section>
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -45,21 +53,17 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
   {
     userIsAuthenticated && (
-      <>
-        <section>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2>Files {fileCount}</h2>
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>Files {fileCount}</h2>
 
-            <a href="/file/new" title="Create file">
-              <span>➕</span>
-            </a>
-          </div>
+          <a href="/file/new" title="Create file">
+            <span>➕</span>
+          </a>
+        </div>
 
-          {files && <FileList files={files} />}
-        </section>
-
-        {user && <EnableNotificationToggle userId={user.id} />}
-      </>
+        {files && <FileList files={files} />}
+      </section>
     )
   }
 </Layout>
