@@ -2,43 +2,89 @@
 
 ---
 
-<form hx-post="/folder/create" hx-target="this" hx-swap="outerHTML">
+<form
+  class="create-folder-form"
+  hx-post="/folder/create"
+  hx-target="this"
+  hx-swap="outerHTML"
+>
   <label for="folder-name">Folder name</label>
   <input id="folder-name" type="text" name="folderName" />
 
-  <button type="submit">Create</button>
-  <button hx-get="/folder/create-button">Cancel</button>
+  <div class="button-wrapper">
+    <button class="create-button" type="submit" title="Create folder">
+      <span>✅</span>
+    </button>
+
+    <button
+      class="cancel-button"
+      hx-get="/folder/create-button"
+      type="button"
+      title="Cancel"
+    >
+      <span>&times;</span>
+    </button>
+  </div>
 </form>
 
 <style is:inline>
-  input,
-  button {
-    margin-left: 1rem;
+  .create-folder-form {
+    display: flex;
+    align-items: center;
+    margin-left: 1.5rem;
+    flex-wrap: wrap;
   }
 
-  /* Mobile */
-  @media (max-width: 37.5em) {
-    form {
+  #folder-name {
+    flex: 1;
+    min-width: 0;
+    margin-left: 1rem;
+    padding: 0.25rem;
+  }
+
+  .button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .create-button {
+    font-size: larger;
+  }
+
+  .cancel-button span {
+    position: relative;
+    top: -0.1rem;
+    font-size: 2rem;
+  }
+
+  .cancel-button,
+  .create-button {
+    background-color: transparent;
+    border: none;
+    margin-left: 0.25rem;
+    width: 45px;
+    height: 45px;
+  }
+
+  @container (max-width: 425px) {
+    .create-folder-form {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
       margin-left: 1rem;
+      width: 100%;
     }
 
-    input {
-      max-width: 200px;
+    #folder-name {
+      margin-left: 0rem;
     }
 
-    input,
-    button {
+    .button-wrapper {
+      justify-content: space-around;
+    }
+
+    .cancel-button,
+    .create-button {
       margin-left: 0;
-      margin-right: 0.5rem;
-    }
-
-    label {
-      display: block;
-    }
-
-    input,
-    label {
-      margin-bottom: 2px;
     }
   }
 </style>
