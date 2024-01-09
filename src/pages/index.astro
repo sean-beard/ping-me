@@ -1,6 +1,6 @@
 ---
 import EnableNotificationToggle from "@/components/EnableNotificationToggle.astro";
-import FileList from "@/components/FileList.astro";
+import Files from "@/components/Files.astro";
 import FolderList from "@/components/FolderList.astro";
 import NewFolderButton from "@/components/NewFolderButton.astro";
 import SignIn from "@/components/SignIn/index.astro";
@@ -22,8 +22,6 @@ if (userIsAuthenticated) {
     files = await fileService.getFiles(user.id);
   }
 }
-
-const fileCount = files?.length ? `(${files.length})` : "";
 ---
 
 <Layout title="Home | PingMe">
@@ -53,16 +51,8 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
   {
     userIsAuthenticated && (
-      <section>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>Files {fileCount}</h2>
-
-          <a href="/file/new" title="Create file">
-            <span>➕</span>
-          </a>
-        </div>
-
-        {files && <FileList files={files} />}
+      <section style="margin-bottom: 3rem;">
+        <Files files={files} />
       </section>
     )
   }
@@ -88,13 +78,5 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
   li {
     margin-bottom: 1rem;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  a span {
-    font-size: 2rem;
   }
 </style>
