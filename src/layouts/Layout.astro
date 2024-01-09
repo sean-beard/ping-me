@@ -1,4 +1,5 @@
 ---
+import Navigation from "@/components/Navigation.astro";
 import { isAuthenticated } from "@/utils/auth";
 import "@fontsource/pacifico";
 
@@ -45,23 +46,7 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
   <body>
     <header>
       <a href="/" style="text-decoration: none;"><h1>PingMe</h1></a>
-      <nav>
-        <ul style="list-style: none;">
-          {
-            userIsAuthenticated && (
-              <li>
-                <button
-                  hx-post="/logout.json"
-                  hx-target="this"
-                  hx-swap="outerHTML"
-                >
-                  Logout
-                </button>
-              </li>
-            )
-          }
-        </ul>
-      </nav>
+      <Navigation userIsAuthenticated={userIsAuthenticated} />
     </header>
     <main>
       <slot />
