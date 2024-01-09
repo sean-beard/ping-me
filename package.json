@@ -15,11 +15,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@astrojs/node": "^7.0.2",
+    "@astrojs/node": "^7.0.4",
     "@fontsource/pacifico": "^5.0.8",
     "@prisma/client": "4.16.2",
     "@toast-ui/editor": "^3.2.2",
-    "astro": "^3.5.3",
+    "astro": "^4.1.1",
     "astro-htmx": "^1.0.5",
     "bcryptjs": "^2.4.3",
     "cron-parser": "^4.9.0",
