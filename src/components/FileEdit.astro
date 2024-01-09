@@ -8,21 +8,21 @@ interface Props {
 const { file } = Astro.props;
 ---
 
-<form hx-put={`/file/${file.id}/update`}>
-  <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+<form class="file-edit-form" hx-put={`/file/${file.id}/update`}>
+  <div class="file-edit-input-group">
     <label for="file-name" style="margin-right: 1rem;">File name</label>
     <input
       type="text"
       id="file-name"
       name="fileName"
       value={file.name}
-      style="max-width: 11rem;"
       autofocus
       onfocus="var temp_value=this.value; this.value=''; this.value=temp_value"
     />
   </div>
 
-  <label for="file-body" style="display:block; margin-bottom: 1rem;">Body</label
+  <label for="file-body" style="display:block; margin-bottom: 0.5rem;"
+    >Body</label
   >
   <div id="editor"></div>
   <input type="hidden" id="file-body" name="fileBody" value={file.html} />
@@ -30,21 +30,41 @@ const { file } = Astro.props;
   <file-editor data-file={file.html}></file-editor>
 
   <div class="form-footer">
-    <button type="submit">Update</button>
+    <button class="primary-button" type="submit">Update</button>
   </div>
 </form>
 
 <style is:inline>
+  .file-edit-form {
+    container-type: inline-size;
+  }
+
+  .file-edit-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .file-edit-input-group input {
+    min-width: 0;
+    max-width: 300px;
+  }
+
   .form-footer {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
   }
 
-  .form-footer button {
-    cursor: pointer;
-    height: 50px;
-    min-width: 125px;
+  @container (max-width: 350px) {
+    .file-edit-input-group {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .file-edit-input-group label {
+      margin-bottom: 0.5rem;
+    }
   }
 
   /* Mobile */

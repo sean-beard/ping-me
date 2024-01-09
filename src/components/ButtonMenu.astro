@@ -116,7 +116,8 @@ const listId = `list-${id}`;
     position: absolute;
     margin-left: -5rem;
     z-index: 1;
-    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
     padding: 0;
   }
 
@@ -132,6 +133,7 @@ const listId = `list-${id}`;
   .list.open li {
     width: 100%;
     min-width: 125px;
+    border-radius: 0.5rem;
   }
 
   .list.open li:hover {

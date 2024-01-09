@@ -143,7 +143,35 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
     cursor: pointer;
   }
 
+  input {
+    padding: 0.25rem;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  .primary-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: 2px solid var(--black);
+    background: var(--background);
+    color: var(--backgblackround);
+    min-width: 90px;
+    transition: all 0.1s ease-out;
+  }
   * {
     box-sizing: border-box;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    header {
+      padding: 0.5rem 1rem;
+    }
+
+    main {
+      padding: 0rem 1rem;
+    }
   }
 </style>

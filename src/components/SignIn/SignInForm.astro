@@ -63,7 +63,7 @@ const navUrlParam = Astro.url.searchParams.get("nav");
 
   <input type="hidden" name="redirect" value={navUrlParam} />
 
-  <button type="submit">
+  <button class="primary-button" type="submit">
     <div id="loader" style="display: none;">
       <i class="loading-spinner"></i>
       <i class="loading-spinner"></i>
@@ -89,16 +89,9 @@ const navUrlParam = Astro.url.searchParams.get("nav");
     }
 
     button {
-      display: block;
       width: 100%;
-      padding: 0.5rem;
-      border: 1px solid var(--black);
-      border-radius: 0.5rem;
       margin-bottom: 1rem;
-      background-color: var(--black);
-      color: white;
     }
-
     .error {
       color: maroon;
       font-size: 0.9rem;

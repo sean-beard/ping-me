@@ -39,17 +39,13 @@ const { file } = Astro.props;
       width: "100%",
     }}
   >
-    <h2>{file.name}</h2>
+    <h2 class="file-name">{file.name}</h2>
 
     <button
+      class="primary-button"
       hx-get={`/file/${file.id}/edit`}
       hx-swap="outerHTML"
       hx-target="#file"
-      style={{
-        width: "100px",
-        height: "50px",
-        cursor: "pointer",
-      }}
     >
       Edit
     </button>
@@ -59,9 +55,9 @@ const { file } = Astro.props;
   <file-viewer data-file={file.html}></file-viewer>
 </div>
 
-<style is:inline>
-  h2 {
-    color: var(--black);
+<style>
+  .file-name {
+    margin-right: 2rem;
   }
 
   .toastui-editor-contents p {

@@ -75,7 +75,7 @@ const { folderId, folderName, isEditing } = Astro.props;
     display: flex;
     align-items: center;
     background-color: var(--card-background);
-    border-radius: 12px;
+    box-shadow: var(--shadow);
     padding: 0.5rem 1rem;
     margin: 0.5rem 0;
     list-style: none;
@@ -118,7 +118,6 @@ const { folderId, folderName, isEditing } = Astro.props;
   .edit-folder-row input {
     flex: 1;
     min-width: 0;
-    padding: 0.25rem;
   }
 
   /* Mobile */
