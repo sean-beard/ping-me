@@ -119,7 +119,6 @@ export class PrismaReminderRepository {
     try {
       // Need to go with raw SQL because Prisma doesn't return the correct date...
       // https://github.com/prisma/prisma/issues/20615
-      // TODO: sanitize SQL
       const sql = `
           SELECT
             r.id,
@@ -130,10 +129,12 @@ export class PrismaReminderRepository {
             u.notificationsEnabled
           FROM
             "Reminder" r
-          JOIN User u ON r.userId = u.id
+            JOIN USER u ON r.userId = u.id
+            JOIN FOLDER f ON r.folderId = f.id
           WHERE
             r.dueDate <= DATETIME ('NOW')
             AND r.isCompleted = 0
+            AND f.isArchived = 0
           `;
 
       return this.client.$queryRawUnsafe(sql);
