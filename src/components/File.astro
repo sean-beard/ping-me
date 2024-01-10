@@ -1,11 +1,14 @@
 ---
 import type { File } from "@/services/types";
+import ButtonMenu from "./ButtonMenu.astro";
 
 interface Props {
   file: File;
 }
 
 const { file } = Astro.props;
+
+const fileId = file.id;
 ---
 
 <script>
@@ -41,14 +44,47 @@ const { file } = Astro.props;
   >
     <h2 class="file-name">{file.name}</h2>
 
-    <button
-      class="primary-button"
-      hx-get={`/file/${file.id}/edit`}
-      hx-swap="outerHTML"
-      hx-target="#file"
-    >
-      Edit
-    </button>
+    <div class="action-panel">
+      <button
+        class="primary-button"
+        hx-get={`/file/${file.id}/edit`}
+        hx-swap="outerHTML"
+        hx-target="#file"
+      >
+        Edit
+      </button>
+
+      <button
+        class="trash-button"
+        hx-get={`/file/${file.id}/delete/confirm`}
+        hx-target="#modal-container"
+        hx-swap="innerHTML"
+      >
+        <span>🗑️</span>
+      </button>
+    </div>
+
+    <div class="mobile-action-panel">
+      <ButtonMenu
+        id={`file-${fileId}-menu`}
+        items={[
+          {
+            label: "Edit",
+            url: `/file/${fileId}/edit`,
+            verb: "GET",
+            target: `#file`,
+            swap: "outerHTML",
+          },
+          {
+            label: "Delete",
+            url: `/file/${fileId}/delete/confirm`,
+            verb: "GET",
+            target: "#modal-container",
+            swap: "innerHTML",
+          },
+        ]}
+      />
+    </div>
   </div>
 
   <div id="viewer"></div>
@@ -56,11 +92,40 @@ const { file } = Astro.props;
 </div>
 
 <style>
+  .action-panel {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-action-panel {
+    display: none;
+  }
+
   .file-name {
     margin-right: 2rem;
   }
 
   .toastui-editor-contents p {
     font-size: large;
+  }
+
+  .trash-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    margin-left: 1rem;
+    width: 50px;
+    height: 50px;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    .action-panel {
+      display: none;
+    }
+
+    .mobile-action-panel {
+      display: block;
+    }
   }
 </style>

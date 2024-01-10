@@ -27,6 +27,18 @@ if (!deletedFileId) {
     { status: 500 },
   );
 }
+
+const shouldRedirect = Astro.request.headers
+  .get("hx-current-url")
+  ?.includes("file");
+
+if (shouldRedirect) {
+  const response = new Response(null, { status: 300 });
+
+  response.headers.set("HX-Redirect", "/");
+
+  return response;
+}
 ---
 
 <></>
