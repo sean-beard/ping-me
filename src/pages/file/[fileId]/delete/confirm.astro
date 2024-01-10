@@ -4,11 +4,15 @@ import DeleteConfirmModal from "@/components/DeleteConfirmModal.astro";
 export const partial = true;
 
 const { fileId } = Astro.params;
+
+const shouldRedirect = Astro.request.headers
+  .get("hx-current-url")
+  ?.includes("file");
 ---
 
 <DeleteConfirmModal
   id={`${fileId}-delete`}
   confirmUrl={`/file/${fileId}/delete`}
   confirmVerb="GET"
-  confirmTarget={`#folder-${fileId}`}
+  confirmTarget={shouldRedirect ? undefined : `#folder-${fileId}`}
 />
