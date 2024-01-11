@@ -21,7 +21,7 @@ export class PrismaUserRepository {
 
       return { id: user.id, username, passwordHash: user.password.hash };
     } catch {
-      console.error("Error getting files");
+      console.error({ message: "Error querying user by username", username });
       return null;
     }
   }
@@ -38,7 +38,11 @@ export class PrismaUserRepository {
 
       return { id: user.id, username, passwordHash };
     } catch (error) {
-      console.error("Error creating user", error);
+      console.error({
+        message: "Error creating user",
+        username,
+        error,
+      });
       return null;
     }
   }
@@ -56,10 +60,11 @@ export class PrismaUserRepository {
 
       return user.notificationsEnabled;
     } catch (error) {
-      console.error(
-        `Error getting notifications enabled preference for user with ID ${userId}:`,
+      console.error({
+        message: "Error getting notifications enabled preference",
+        userId,
         error,
-      );
+      });
       throw error;
     }
   }
@@ -74,10 +79,12 @@ export class PrismaUserRepository {
         data: { notificationsEnabled: enabled },
       });
     } catch (error) {
-      console.error(
-        `Error setting notifications enabled preference for user with ID ${userId}:`,
+      console.error({
+        message: "Error setting notifications enabled preference",
+        userId,
+        enabled,
         error,
-      );
+      });
       throw error;
     }
   }

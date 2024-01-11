@@ -61,4 +61,7 @@ ENTRYPOINT [ "/app/docker-entrypoint.js" ]
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 ENV DATABASE_URL="file:///data/ping_me_db.db"
+
+RUN yarn astro preferences disable devToolbar
+
 CMD [ "yarn", "run", "start" ]
