@@ -35,7 +35,7 @@ export class ReminderService {
   async updateReminderDueDate(
     id: number,
     dueDate: Date,
-  ): Promise<DatabaseReminder | null> {
+  ): Promise<boolean | null> {
     return this.reminderRepository.updateReminderDueDate(id, dueDate);
   }
 

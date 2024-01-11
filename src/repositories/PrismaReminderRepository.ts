@@ -39,10 +39,12 @@ export class PrismaReminderRepository {
 
       return rawReminders[0] ?? null;
     } catch (error) {
-      console.error(
-        `Error getting notification preference for user ${userId} and folder ${folderId}`,
+      console.error({
+        message: "Error getting reminder",
+        userId,
+        folderId,
         error,
-      );
+      });
       return null;
     }
   }
@@ -71,10 +73,14 @@ export class PrismaReminderRepository {
 
       return true;
     } catch (error) {
-      console.error(
-        `Error upserting notification preference for user ${userId} and folder ${folderId}`,
+      console.error({
+        message: "Error upserting reminder",
+        userId,
+        folderId,
+        dueDate,
+        schedule,
         error,
-      );
+      });
       return null;
     }
   }
@@ -82,7 +88,7 @@ export class PrismaReminderRepository {
   async updateReminderDueDate(
     id: number,
     dueDate: Date,
-  ): Promise<DatabaseReminder | null> {
+  ): Promise<boolean | null> {
     try {
       const formattedDate = this.getFormattedDate(dueDate);
 
@@ -94,9 +100,14 @@ export class PrismaReminderRepository {
 
       await this.client.$executeRawUnsafe(sql);
 
-      return null;
+      return true;
     } catch (error) {
-      console.error("Error updating reminder due date", error);
+      console.error({
+        message: "Error updating reminder due date",
+        reminderId: id,
+        dueDate,
+        error,
+      });
       return null;
     }
   }
@@ -110,7 +121,11 @@ export class PrismaReminderRepository {
 
       return true;
     } catch (error) {
-      console.error("Error marking reminder as completed", error);
+      console.error({
+        message: "Error marking reminder as completed",
+        reminderId: id,
+        error,
+      });
       return null;
     }
   }
@@ -139,7 +154,7 @@ export class PrismaReminderRepository {
 
       return this.client.$queryRawUnsafe(sql);
     } catch (error) {
-      console.error("Error getting due reminders", error);
+      console.error({ message: "Error getting due reminders", error });
       return null;
     }
   }
