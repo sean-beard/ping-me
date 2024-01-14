@@ -20,8 +20,10 @@
     "@prisma/client": "4.16.2",
     "@toast-ui/editor": "^3.2.2",
     "astro": "^3.5.3",
+    "astro-htmx": "^1.0.5",
     "bcryptjs": "^2.4.3",
     "cron-parser": "^4.9.0",
+    "htmx.org": "^1.9.10",
     "jsonwebtoken": "^9.0.1",
     "typescript": "^5.3.3",
     "web-push": "^3.6.6"

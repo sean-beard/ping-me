@@ -1151,6 +1151,11 @@ astro-eslint-parser@^0.14.0:
     espree "^9.0.0"
     semver "^7.3.8"
 
+astro-htmx@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/astro-htmx/-/astro-htmx-1.0.5.tgz#dcce60eff7ad9798c1fd08fe1063ebf8b71d6e2b"
+  integrity sha512-lTwGy5sMyvp6+O6UiSQEXrEWimRpPi16mMBbQTWUshWrGklCpYbtho6eaZVonFcB9ue7Y7FjTTPiYfp0hUUEuQ==
+
 astro@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/astro/-/astro-3.5.3.tgz#bf3166ea79748369b149ee163fb3ea41768d4c23"
@@ -2739,6 +2744,11 @@ html-void-elements@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/html-void-elements/-/html-void-elements-3.0.0.tgz#fc9dbd84af9e747249034d4d62602def6517f1d7"
   integrity sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==
+
+htmx.org@^1.9.10:
+  version "1.9.10"
+  resolved "https://registry.yarnpkg.com/htmx.org/-/htmx.org-1.9.10.tgz#63c67e1e7a447086a3119c156f08722c624aacac"
+  integrity sha512-UgchasltTCrTuU2DQLom3ohHrBvwr7OqpwyAVJ9VxtNBng4XKkVsqrv0Qr3srqvM9ZNI3f1MmvVQQqK7KW/bTA==
 
 http-cache-semantics@^4.1.1:
   version "4.1.1"
