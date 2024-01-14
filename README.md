@@ -25,3 +25,27 @@ Compile and minify for production
 ```bash
 $ yarn build
 ```
+
+## Deployment
+
+This project uses [Fly.io](https://fly.io/) for deployment. As of now, deployment is done manually via [the Fly CLI](https://fly.io/docs/getting-started/installing-flyctl).
+
+```bash
+$ fly deploy 
+```
+
+To inspect prisma data in a Fly environment:
+```bash
+$ fly proxy 3001:5555
+
+# New terminal session:
+$ fly ssh console
+$ npx prisma studio
+
+# Navigate to http://localhost:3001
+```
+
+To copy a SQLite DB locally:
+```bash
+$ fly ssh sftp get /data/ping_me_db.db ./backups/1_9_24.db
+```
