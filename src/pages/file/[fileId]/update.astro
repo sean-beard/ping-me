@@ -1,6 +1,6 @@
 ---
 import File from "@/components/File.astro";
-import { isAuthenticated } from "@/utils/auth";
+import { getUser } from "@/utils/auth";
 import { fileService } from "@/services";
 import FileEdit from "@/components/FileEdit.astro";
 
@@ -8,8 +8,9 @@ export const partial = true;
 
 let error = "";
 let updatedFile = null;
+const user = getUser(Astro.cookies);
 
-if (!isAuthenticated(Astro.cookies)) {
+if (!user) {
   return new Response(null, {
     status: 400,
     statusText: "Invalid Authorization header.",
@@ -42,7 +43,7 @@ const html = fileBody ? fileBody.toString() : "";
 
 const file = { name, html };
 
-updatedFile = await fileService.updateFile(Number(fileId), file);
+updatedFile = await fileService.updateFile(Number(fileId), file, user.id);
 
 if (!updatedFile) {
   error = "Error updating file with ID: " + fileId;

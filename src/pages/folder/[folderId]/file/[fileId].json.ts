@@ -1,10 +1,12 @@
 import type { APIRoute } from "astro";
 
 import { folderService } from "@/services";
-import { isAuthenticated } from "@/utils/auth";
+import { getUser } from "@/utils/auth";
 
 export const DELETE: APIRoute = async ({ params, cookies }) => {
-  if (!isAuthenticated(cookies)) {
+  const user = getUser(cookies);
+
+  if (!user) {
     return new Response(null, {
       status: 400,
       statusText: "Invalid Authorization header.",
@@ -26,9 +28,11 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
     });
   }
 
-  const updatedFolder = await folderService.deleteFiles(Number(folderId), [
-    Number(fileId),
-  ]);
+  const updatedFolder = await folderService.deleteFiles(
+    Number(folderId),
+    [Number(fileId)],
+    user.id,
+  );
 
   if (!updatedFolder) {
     return new Response(
