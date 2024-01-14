@@ -56,41 +56,57 @@ export class FileService {
     return newFile;
   }
 
-  async updateFile(id: number, file: Partial<File>): Promise<File | null> {
+  async updateFile(
+    id: number,
+    file: Partial<File>,
+    userId: number,
+  ): Promise<File | null> {
+    const hasAccessToFile = await this.hasAccessToFile(id, userId);
+
+    if (!hasAccessToFile) {
+      return null;
+    }
+
     const updatedFile = await this.fileRepository.updateFile(id, file);
 
     return updatedFile;
   }
 
-  async deleteFile(id: number): Promise<number | null> {
+  async deleteFile(id: number, userId: number): Promise<number | null> {
+    const hasAccessToFile = await this.hasAccessToFile(id, userId);
+
+    if (!hasAccessToFile) {
+      return null;
+    }
+
     const deletedFileId = await this.fileRepository.deleteFile(id);
 
     return deletedFileId;
   }
 
-  // private async hasAccessToFile(
-  //   fileId: number,
-  //   userId: number,
-  // ): Promise<boolean> {
-  //   try {
-  //     const file = await this.getFile(fileId, userId);
+  private async hasAccessToFile(
+    fileId: number,
+    userId: number,
+  ): Promise<boolean> {
+    try {
+      const file = await this.getFile(fileId, userId);
 
-  //     if (!file) {
-  //       console.log(`File with ID: ${fileId} cannot be found`);
-  //       return false;
-  //     }
+      if (!file) {
+        console.log(`File with ID: ${fileId} cannot be found`);
+        return false;
+      }
 
-  //     if (file?.userId !== userId) {
-  //       console.log(
-  //         `User ${userId} does not have access to file with ID: ${fileId}`,
-  //       );
-  //       return false;
-  //     }
+      if (file?.userId !== userId) {
+        console.log(
+          `User ${userId} does not have access to file with ID: ${fileId}`,
+        );
+        return false;
+      }
 
-  //     return true;
-  //   } catch {
-  //     console.error("Error finding file with ID: " + fileId);
-  //     return false;
-  //   }
-  // }
+      return true;
+    } catch {
+      console.error("Error finding file with ID: " + fileId);
+      return false;
+    }
+  }
 }

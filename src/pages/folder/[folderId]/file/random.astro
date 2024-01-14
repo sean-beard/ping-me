@@ -1,5 +1,6 @@
 ---
 import { folderService } from "@/services";
+import { getUser } from "@/utils/auth";
 
 export const partial = true;
 
@@ -11,7 +12,15 @@ if (!folderId || isNaN(Number(folderId))) {
   });
 }
 
-const randomFile = await folderService.getRandomFile(Number(folderId));
+const user = getUser(Astro.cookies);
+
+if (!user) {
+  return new Response(JSON.stringify({ error: "User is not logged in" }), {
+    status: 401,
+  });
+}
+
+const randomFile = await folderService.getRandomFile(Number(folderId), user.id);
 
 if (!randomFile) {
   return new Response(

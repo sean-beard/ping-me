@@ -48,8 +48,16 @@ export class FolderService {
   async updateFolder(
     folderId: number,
     folder: Partial<Folder>,
+    userId: number,
   ): Promise<Folder | null> {
-    // TODO: add check here
+    const isFolderOwnershipValid = await this.isFolderOwnershipValid(
+      folderId,
+      userId,
+    );
+
+    if (!isFolderOwnershipValid) {
+      return null;
+    }
 
     const updatedFolder = await this.folderRepository.updateFolder(
       folderId,
@@ -114,7 +122,17 @@ export class FolderService {
   async deleteFiles(
     folderId: number,
     fileIds: number[],
+    userId: number,
   ): Promise<Folder | null> {
+    const isFolderOwnershipValid = await this.isFolderOwnershipValid(
+      folderId,
+      userId,
+    );
+
+    if (!isFolderOwnershipValid) {
+      return null;
+    }
+
     const updatedFolder = await this.folderRepository.deleteFiles(
       folderId,
       fileIds,
@@ -127,6 +145,29 @@ export class FolderService {
     folderId: number,
     userId: number,
   ): Promise<NotificationPreference> {
+    const isFolderOwnershipValid = await this.isFolderOwnershipValid(
+      folderId,
+      userId,
+    );
+
+    if (!isFolderOwnershipValid) {
+      console.log("Returning default notification preference");
+
+      return {
+        date: "",
+        time: "",
+        repeat: {
+          sunday: false,
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+        },
+      };
+    }
+
     const reminder = await reminderService.getReminder(folderId, userId);
 
     if (!reminder) {
@@ -236,6 +277,15 @@ export class FolderService {
     folderId: number,
     notificationPreference: NotificationPreference,
   ): Promise<boolean | null> {
+    const isFolderOwnershipValid = await this.isFolderOwnershipValid(
+      folderId,
+      userId,
+    );
+
+    if (!isFolderOwnershipValid) {
+      return null;
+    }
+
     const schedule = this.getCronSchedule(notificationPreference);
     const dueDateInUtc = new Date(
       `${notificationPreference.date}T${notificationPreference.time}:00Z`,
@@ -251,7 +301,16 @@ export class FolderService {
     return success;
   }
 
-  async getRandomFile(folderId: number): Promise<File | null> {
+  async getRandomFile(folderId: number, userId: number): Promise<File | null> {
+    const isFolderOwnershipValid = await this.isFolderOwnershipValid(
+      folderId,
+      userId,
+    );
+
+    if (!isFolderOwnershipValid) {
+      return null;
+    }
+
     const files = await this.folderRepository.getFiles(folderId);
 
     if (!files) {
@@ -288,7 +347,10 @@ export class FolderService {
             continue;
           }
 
-          const file = await this.getRandomFile(reminder.folderId);
+          const file = await this.getRandomFile(
+            reminder.folderId,
+            reminder.userId,
+          );
 
           if (!file) {
             console.error(
