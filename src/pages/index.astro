@@ -22,6 +22,87 @@ if (userIsAuthenticated) {
 }
 ---
 
+<script>
+  import { Watcher } from "@/scripts/Watcher";
+  import { registerMenuEventListeners } from "@/scripts/registerMenuEventListeners";
+
+  const mutationCallback = (mutation: MutationRecord) => {
+    const mutationTarget = mutation.target as HTMLElement | null;
+
+    const folderDeleted =
+      mutationTarget?.id === "folder-list-wrapper" &&
+      mutation.removedNodes.length > 0;
+    const newFolderAdded =
+      mutationTarget?.id === "folder-list" &&
+      mutation.addedNodes.length > 0 &&
+      // @ts-ignore
+      mutation.addedNodes[0].classList?.contains("folder-row");
+
+    if (newFolderAdded) {
+      const addedNode = mutation.addedNodes[0] as HTMLElement;
+      const id = addedNode.id.replace("folder-", "").replace("-row", "");
+      registerRowEventListeners(id);
+    }
+
+    if (folderDeleted) {
+      registerAllEventListeners();
+    }
+  };
+
+  const registerRowEventListeners = (id: string) => {
+    const toggleButton = document.getElementById(
+      `toggle-button-folder-${id}-menu`,
+    );
+    const list = document.getElementById(`list-folder-${id}-menu`);
+
+    if (!toggleButton || !list) {
+      console.error("toggleButton or list not found", {
+        toggleButton,
+        list,
+      });
+      return;
+    }
+
+    registerMenuEventListeners(toggleButton, list);
+  };
+
+  const registerAllEventListeners = () => {
+    const toggleButtons = document.querySelectorAll(
+      '[id^="toggle-button-folder-"]',
+    );
+
+    const toggleButtonIds = Array.from(toggleButtons).map(
+      (toggleButton) => toggleButton.id,
+    );
+
+    toggleButtonIds.forEach((toggleButtonId) => {
+      const listId = toggleButtonId.replace("toggle-button", "list");
+
+      const toggleButton = document.getElementById(toggleButtonId);
+      const list = document.getElementById(listId);
+
+      if (!toggleButton || !list) {
+        console.error("toggleButton or list not found", {
+          toggleButtonId,
+          listId,
+        });
+        return;
+      }
+
+      registerMenuEventListeners(toggleButton, list);
+    });
+  };
+
+  const folderListWrapper = document.getElementById("folder-list-wrapper");
+
+  if (!folderListWrapper) {
+    throw new Error("folder-list-wrapper not found");
+  }
+
+  const folderWatcher = new Watcher(mutationCallback);
+  folderWatcher.startWatching(folderListWrapper);
+</script>
+
 <Layout title="Home | PingMe">
   {!userIsAuthenticated && <SignIn />}
 
@@ -44,7 +125,9 @@ if (userIsAuthenticated) {
           <NewFolderButton />
         </div>
 
-        <FolderList folders={folders} />
+        <div id="folder-list-wrapper">
+          <FolderList folders={folders} />
+        </div>
       </section>
     )
   }
