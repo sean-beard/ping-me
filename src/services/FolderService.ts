@@ -199,79 +199,6 @@ export class FolderService {
     };
   }
 
-  private getNotificationRepeat(schedule: string | null): NotificationRepeat {
-    if (!schedule) {
-      return {
-        sunday: false,
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-      };
-    }
-
-    const hasMultipleDays = schedule.indexOf(",") !== -1;
-
-    if (hasMultipleDays) {
-      const parts = schedule.split(" ");
-      const days = parts[parts.length - 1].split(",");
-
-      return {
-        sunday: days.includes("0"),
-        monday: days.includes("1"),
-        tuesday: days.includes("2"),
-        wednesday: days.includes("3"),
-        thursday: days.includes("4"),
-        friday: days.includes("5"),
-        saturday: days.includes("6"),
-      };
-    }
-
-    const lastFiveCharacters = schedule.slice(-5);
-    const isDaily = schedule.slice(-3) === "* *";
-
-    return {
-      sunday: lastFiveCharacters === "* * 0" || isDaily,
-      monday: lastFiveCharacters === "* * 1" || isDaily,
-      tuesday: lastFiveCharacters === "* * 2" || isDaily,
-      wednesday: lastFiveCharacters === "* * 3" || isDaily,
-      thursday: lastFiveCharacters === "* * 4" || isDaily,
-      friday: lastFiveCharacters === "* * 5" || isDaily,
-      saturday: lastFiveCharacters === "* * 6" || isDaily,
-    };
-  }
-
-  private getCronSchedule(
-    notificationPreference: NotificationPreference,
-  ): string | null {
-    const daysOfWeek: (keyof typeof notificationPreference.repeat)[] = [
-      "sunday",
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-    ];
-
-    const selectedDays = daysOfWeek
-      .filter((day) => notificationPreference.repeat[day])
-      .map((day) => daysOfWeek.indexOf(day))
-      .join(",");
-
-    if (selectedDays === "") {
-      return null;
-    }
-
-    const time = notificationPreference.time.split(":");
-    const hours = time[0];
-    const minutes = time[1];
-
-    return `${minutes} ${hours} * * ${selectedDays}`;
-  }
-
   async setNotificationPreference(
     userId: number,
     folderId: number,
@@ -456,5 +383,78 @@ export class FolderService {
       console.error("Error finding folder with ID: " + folderId);
       return false;
     }
+  }
+
+  private getNotificationRepeat(schedule: string | null): NotificationRepeat {
+    if (!schedule) {
+      return {
+        sunday: false,
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+      };
+    }
+
+    const hasMultipleDays = schedule.indexOf(",") !== -1;
+
+    if (hasMultipleDays) {
+      const parts = schedule.split(" ");
+      const days = parts[parts.length - 1].split(",");
+
+      return {
+        sunday: days.includes("0"),
+        monday: days.includes("1"),
+        tuesday: days.includes("2"),
+        wednesday: days.includes("3"),
+        thursday: days.includes("4"),
+        friday: days.includes("5"),
+        saturday: days.includes("6"),
+      };
+    }
+
+    const lastFiveCharacters = schedule.slice(-5);
+    const isDaily = schedule.slice(-3) === "* *";
+
+    return {
+      sunday: lastFiveCharacters === "* * 0" || isDaily,
+      monday: lastFiveCharacters === "* * 1" || isDaily,
+      tuesday: lastFiveCharacters === "* * 2" || isDaily,
+      wednesday: lastFiveCharacters === "* * 3" || isDaily,
+      thursday: lastFiveCharacters === "* * 4" || isDaily,
+      friday: lastFiveCharacters === "* * 5" || isDaily,
+      saturday: lastFiveCharacters === "* * 6" || isDaily,
+    };
+  }
+
+  private getCronSchedule(
+    notificationPreference: NotificationPreference,
+  ): string | null {
+    const daysOfWeek: (keyof typeof notificationPreference.repeat)[] = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
+
+    const selectedDays = daysOfWeek
+      .filter((day) => notificationPreference.repeat[day])
+      .map((day) => daysOfWeek.indexOf(day))
+      .join(",");
+
+    if (selectedDays === "") {
+      return null;
+    }
+
+    const time = notificationPreference.time.split(":");
+    const hours = time[0];
+    const minutes = time[1];
+
+    return `${minutes} ${hours} * * ${selectedDays}`;
   }
 }
