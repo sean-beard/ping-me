@@ -37,8 +37,10 @@ if (userIsAuthenticated) {
     userIsAuthenticated && folders && (
       <section style="container-type: inline-size;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>Folders</h2>
-
+          <div style="display: flex; align-items: center;">
+            <span style="font-size: xx-large; margin-right: 1rem">📂</span>
+            <h2>Folders</h2>
+          </div>
           <NewFolderButton />
         </div>
 

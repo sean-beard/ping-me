@@ -17,7 +17,7 @@ const { folderId } = Astro.props;
   <label for="file-body" style="display:block; margin-bottom: 1rem;">Body</label
   >
   <file-editor></file-editor>
-  <div id="editor"></div>
+  <div id="editor" style="flex: 1"></div>
   <input type="hidden" id="file-body" name="fileBody" />
 
   <div class="form-footer">
@@ -28,12 +28,17 @@ const { folderId } = Astro.props;
 <style>
   .file-edit-form {
     container-type: inline-size;
+    max-width: 700px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
   .file-edit-input-group {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 
   .file-edit-input-group input {

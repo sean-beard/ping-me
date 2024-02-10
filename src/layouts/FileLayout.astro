@@ -5,6 +5,7 @@ const props = Astro.props;
 ---
 
 <script>
+  // @ts-ignore
   import Editor from "@toast-ui/editor";
   import "@toast-ui/editor/dist/toastui-editor.css";
 
@@ -45,5 +46,14 @@ const props = Astro.props;
 </script>
 
 <Layout {...props}>
-  <slot />
+  <div class="container">
+    <slot />
+  </div>
 </Layout>
+
+<style>
+  .container {
+    padding-bottom: 3rem;
+    height: 100%;
+  }
+</style>

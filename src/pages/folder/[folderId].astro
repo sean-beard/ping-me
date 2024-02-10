@@ -41,8 +41,8 @@ const fileCount = files?.length ? `(${files.length})` : "";
   {
     folder && (
       <div class="folder-page">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>{folder.name}</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <h2 style="margin-right: 2rem;">{folder.name}</h2>
           <div>
             <button
               class="notification-preference-button"
@@ -59,7 +59,12 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
         <section>
           <div style="display: flex; justify-content: space-between;">
-            <h3>Files {fileCount}</h3>
+            <div style="display: flex; align-items: center;">
+              <span style="font-size: xx-large; margin-right: 1rem">📝</span>
+              <h3>
+                Files <span class="file-count">{fileCount}</span>
+              </h3>
+            </div>
 
             <button
               class="add-files-button"
@@ -74,7 +79,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
           </div>
           <div id="modal" />
 
-          {!!files?.length && (
+          {!!files?.length && files.length > 2 && (
             <div class="random-file-container">
               <button
                 class="primary-button"
@@ -97,6 +102,15 @@ const fileCount = files?.length ? `(${files.length})` : "";
 </Layout>
 
 <style>
+  section {
+    background-color: var(--section-background);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    padding-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+
   .random-file-container {
     display: flex;
     align-items: center;
@@ -120,6 +134,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
     margin: 0 auto;
     max-width: 700px;
     padding: 1rem;
+    padding-top: 0;
   }
 
   .add-files-button {
@@ -144,6 +159,12 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
   .notification-preference-button span {
     font-size: 2rem;
+  }
+
+  .file-count {
+    font-size: 16px;
+    color: var(--gray);
+    vertical-align: super;
   }
 
   /* Mobile */

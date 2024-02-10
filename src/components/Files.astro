@@ -46,7 +46,10 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
 <div id="files">
   <div class="container">
-    <h2>Files {fileCount}</h2>
+    <div style="display: flex; align-items: center;">
+      <span style="font-size: xx-large; margin-right: 1rem">📝</span>
+      <h2>Files <span class="file-count">{fileCount}</span></h2>
+    </div>
 
     <button
       class="accordian-button"
@@ -110,5 +113,10 @@ const fileCount = files?.length ? `(${files.length})` : "";
   .accordian-button span {
     display: inline-block;
     transition: transform 0.2s ease-in-out;
+  }
+
+  .file-count {
+    font-size: 16px;
+    vertical-align: super;
   }
 </style>
