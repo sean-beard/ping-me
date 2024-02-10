@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "prisma:init": "npx prisma generate && npx prisma migrate dev",
     "migrate": "npx prisma migrate dev --name",
     "seed": "npx tsx seed.ts && yarn seed:files",
     "seed:files": "npx tsx seed-files.ts",
