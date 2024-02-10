@@ -48,7 +48,9 @@ const { folderId, folderName, isEditing } = Astro.props;
 {
   !isEditing && (
     <li id={`folder-${folderId}-row`} hx-swap="outerHTML" class="folder-row">
-      <a href={`/folder/${folderId}`}>{folderName}</a>
+      <div class="folder-name">
+        <a href={`/folder/${folderId}`}>{folderName}</a>
+      </div>
 
       <ButtonMenu
         id={`folder-${folderId}-menu`}
@@ -78,7 +80,8 @@ const { folderId, folderName, isEditing } = Astro.props;
     display: flex;
     align-items: center;
     background-color: var(--card-background);
-    box-shadow: var(--shadow);
+    border: 1px solid var(--black);
+    border-radius: 4px;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0;
     list-style: none;
@@ -93,6 +96,12 @@ const { folderId, folderName, isEditing } = Astro.props;
     align-items: center;
     width: 100%;
     flex-wrap: wrap;
+  }
+
+  .folder-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .save-button {
