@@ -7,15 +7,15 @@ async function main() {
   const user = await prisma.user.create({
     data: {
       id: 1,
-      username: "seanbeard",
+      username: "testing",
       firstName: "Sean",
       lastName: "Beard",
       email: "sean@beard.io",
-      password: { create: { hash: await bcrypt.hash("password", 10) } },
+      password: { create: { hash: await bcrypt.hash("pw", 10) } },
     },
   });
 
-  console.log(user);
+  console.log("Created user:", user);
 }
 
 main()
