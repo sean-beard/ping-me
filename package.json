@@ -12,7 +12,8 @@
     "seed": "npx ts-node --esm ./seed.ts",
     "lint": "eslint --ext .ts,.tsx,.astro .",
     "lint:fix": "yarn lint --fix",
-    "test": "vitest",
+    "test": "npx vitest",
+    "test:ci": "yarn typecheck && yarn test run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
