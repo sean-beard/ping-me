@@ -41,6 +41,25 @@ if (shouldRedirect) {
 
   return response;
 }
+
+let fileCount = null;
+
+try {
+  const files = await fileService.getFiles(user.id);
+
+  fileCount = files?.length ? `(${files.length})` : "";
+} catch {
+  console.error({
+    message: "Error getting files to hydrate file count.",
+    userId: user.id,
+  });
+}
 ---
+
+{
+  fileCount !== null && (
+    <div hx-swap-oob="innerHTML:.file-count">{fileCount}</div>
+  )
+}
 
 <></>
