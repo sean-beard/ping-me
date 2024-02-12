@@ -69,6 +69,7 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
   html {
     font-family: system-ui, sans-serif;
     background-color: var(--background);
+    height: 100%;
   }
 
   header {
@@ -92,13 +93,16 @@ const userIsAuthenticated = isAuthenticated(Astro.cookies);
   }
 
   body {
+    display: flex;
+    flex-direction: column;
     margin: 0;
-    height: calc(100vh - 125px);
+    height: 100%;
   }
 
   main {
     padding: 1rem 2rem;
     padding-top: 0;
+    flex: 1;
   }
 
   code {
