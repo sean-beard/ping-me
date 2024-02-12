@@ -50,7 +50,7 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
   }
 
   const response = `
-    <h2>File moved successfully!</h2>
+    <h2>File(s) moved successfully!</h2>
   `;
 
   return new Response(response, { status: 200 });

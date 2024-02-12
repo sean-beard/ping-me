@@ -24,13 +24,106 @@ try {
 }
 ---
 
+<script>
+  import { Watcher } from "@/scripts/Watcher";
+
+  const registerFolderSearch = () => {
+    const searchForm = document.querySelector<HTMLFormElement>("search form");
+
+    searchForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+
+    const searchInput =
+      document.querySelector<HTMLInputElement>("search input");
+
+    if (!searchInput) {
+      throw new Error("Search input not found");
+    }
+
+    const filterRows = (searchValue: string) => {
+      const folderRows =
+        document.querySelectorAll<HTMLDivElement>(".checkbox-row");
+
+      if (!folderRows) {
+        throw new Error("Folder rows not found");
+      }
+
+      folderRows.forEach((row) => {
+        const folderNameElement = row.querySelector(".folder-name");
+
+        if (!folderNameElement) {
+          throw new Error("Folder name element not found");
+        }
+
+        const folderName = folderNameElement.textContent?.toLowerCase() ?? "";
+
+        if (folderName.includes(searchValue)) {
+          row.style.display = "flex";
+        } else {
+          row.style.display = "none";
+
+          const checkbox =
+            row.querySelector<HTMLInputElement>(".move-checkbox");
+
+          if (!checkbox) {
+            throw new Error("Checkbox not found");
+          }
+
+          if (checkbox.checked) checkbox.checked = false;
+        }
+      });
+    };
+
+    if (searchInput.value) {
+      filterRows(searchInput.value.toLowerCase());
+    }
+
+    searchInput.addEventListener("keyup", (event) => {
+      const searchInputElement = event.target as HTMLInputElement;
+      const searchValue = searchInputElement.value.toLowerCase();
+
+      filterRows(searchValue);
+    });
+  };
+
+  registerFolderSearch();
+
+  const mutationCallback = (mutation: MutationRecord) => {
+    const addedNode = mutation.addedNodes[0];
+    const shouldReRegister =
+      addedNode instanceof HTMLDialogElement &&
+      addedNode.id.startsWith("move-modal-");
+
+    if (shouldReRegister) {
+      registerFolderSearch();
+    }
+  };
+
+  const watcher = new Watcher(mutationCallback);
+
+  watcher.startWatching(document.body);
+</script>
+
 <Modal modalId={modalId} closeButtonId={closeButtonId}>
   {!folders && <h2>No folders</h2>}
 
+  <search>
+    <form>
+      <label for="search" style="margin-right: 1rem;">Search folders</label>
+      <input type="search" id="search" name="search" />
+    </form>
+  </search>
+
+  <h2 class="form-title">Copy file to folder(s):</h2>
   {
     folders && (
-      <form hx-post={`/move/file/${fileId}.json`} target={`#${modalId}`}>
-        <div style="margin-bottom: 1rem;">
+      <form
+        class="move-form"
+        hx-post={`/move/file/${fileId}.json`}
+        hx-target={`#${modalId} .modal-body`}
+      >
+        <div class="folder-list">
           {folders.map((folder) => (
             <div class="checkbox-row">
               <input
@@ -40,7 +133,9 @@ try {
                 name="folderIds"
                 value={folder.id}
               />
-              <label for={folder.id.toString()}>{folder.name}</label>
+              <label class="folder-name" for={folder.id.toString()}>
+                {folder.name}
+              </label>
             </div>
           ))}
         </div>
@@ -54,25 +149,33 @@ try {
 </Modal>
 
 <style>
-  form {
+  search form {
+    margin-bottom: 1rem;
+  }
+
+  .move-form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
-    margin: 0 auto;
-    min-width: 300px;
-    max-width: 400px;
   }
 
-  label {
+  .form-title {
+    font-size: large;
+    font-weight: normal;
+    margin-left: 0;
+  }
+
+  .move-form label {
     margin-left: 0.5rem;
+    flex: 1;
   }
 
   .move-checkbox:checked + label {
     font-weight: bold;
   }
 
-  label,
+  .move-form label,
   .move-checkbox {
     cursor: pointer;
     margin: 0;
@@ -85,7 +188,75 @@ try {
 
   .checkbox-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    background-color: var(--card-background);
+    border: 1px solid var(--black);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    list-style: none;
+    min-width: 100px;
+  }
+
+  .folder-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-gap: 1rem;
+    grid-auto-rows: min-content;
+    margin-bottom: 2rem;
+    height: 100%;
+  }
+
+  .folder-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .folder-name:focus-within {
+    outline: auto;
+  }
+
+  .primary-button {
+    margin-left: auto;
+    min-width: 100px;
+    float: right;
+  }
+
+  /* Mobile */
+  @media (max-width: 37.5em) {
+    search form {
+      margin-bottom: 0;
+    }
+
+    search label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    search input {
+      width: 100%;
+    }
+
+    .move-form,
+    .form-title {
+      min-width: 100%;
+      margin: 1rem auto;
+    }
+
+    .folder-list {
+      grid-template-columns: repeat(auto-fill, 100%);
+    }
+
+    .checkbox-row {
+      padding-right: 0.5rem;
+    }
+
+    .primary-button {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 </style>
