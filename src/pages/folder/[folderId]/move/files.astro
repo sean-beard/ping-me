@@ -4,8 +4,6 @@ import { fileService } from "@/services";
 import type { File } from "@/services/types";
 import { getUser } from "@/utils/auth";
 
-export const partial = true;
-
 const modalId = "move-modal";
 const closeButtonId = "close-modal";
 
@@ -27,50 +25,135 @@ try {
 }
 ---
 
-<Modal modalId={modalId} closeButtonId={closeButtonId}>
-  <div class="modal-body">
-    {!files && <h2>No files</h2>}
+<script>
+  import { Watcher } from "@/scripts/Watcher";
+  console.log("hi");
 
-    <a
-      href={`/folder/${folderId}/file/new`}
-      style="display: block; margin-bottom: 2rem;">Create a new file</a
-    >
+  const registerFolderSearch = () => {
+    console.log("testing");
+    const searchForm =
+      document.querySelector<HTMLFormElement>(".file-search-form");
 
-    <h2 style="font-size: large; font-weight: normal;">Copy existing files:</h2>
-    {
-      files && (
-        <form
-          class="move-form"
-          hx-post={`/folder/${folderId}/move/files.json`}
-          target={`#${modalId}`}
-        >
-          <div style="margin-bottom: 1rem;">
-            {files.map((file) => (
-              <div class="checkbox-row">
-                <input
-                  class="move-checkbox"
-                  type="checkbox"
-                  id={file.id.toString()}
-                  name="fileIds"
-                  value={file.id}
-                />
-                <label for={file.id.toString()}>{file.name}</label>
-              </div>
-            ))}
-          </div>
+    searchForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
 
-          <button class="primary-button" type="submit">
-            Move
-          </button>
-        </form>
-      )
+    const searchInput =
+      document.querySelector<HTMLInputElement>("search input");
+
+    if (!searchInput) {
+      throw new Error("Search input not found");
     }
-  </div>
+
+    const filterRows = (searchValue: string) => {
+      const folderRows =
+        document.querySelectorAll<HTMLDivElement>(".checkbox-row");
+
+      if (!folderRows) {
+        throw new Error("File rows not found");
+      }
+
+      folderRows.forEach((row) => {
+        const folderNameElement = row.querySelector(".file-name");
+
+        if (!folderNameElement) {
+          throw new Error("File name element not found");
+        }
+
+        const folderName = folderNameElement.textContent?.toLowerCase() ?? "";
+
+        if (folderName.includes(searchValue)) {
+          row.style.display = "flex";
+        } else {
+          row.style.display = "none";
+
+          const checkbox =
+            row.querySelector<HTMLInputElement>(".move-checkbox");
+
+          if (!checkbox) {
+            throw new Error("Checkbox not found");
+          }
+
+          if (checkbox.checked) checkbox.checked = false;
+        }
+      });
+    };
+
+    if (searchInput.value) {
+      filterRows(searchInput.value.toLowerCase());
+    }
+
+    searchInput.addEventListener("keyup", (event) => {
+      const searchInputElement = event.target as HTMLInputElement;
+      const searchValue = searchInputElement.value.toLowerCase();
+
+      filterRows(searchValue);
+    });
+  };
+
+  registerFolderSearch();
+
+  const mutationCallback = (mutation: MutationRecord) => {
+    const addedNode = mutation.addedNodes[0];
+    const shouldReRegister =
+      addedNode instanceof HTMLDialogElement && addedNode.id === "move-modal";
+
+    if (shouldReRegister) {
+      registerFolderSearch();
+    }
+  };
+
+  const watcher = new Watcher(mutationCallback);
+
+  watcher.startWatching(document.body);
+</script>
+
+<Modal modalId={modalId} closeButtonId={closeButtonId}>
+  {!files && <h2>No files</h2>}
+
+  <search>
+    <form class="file-search-form">
+      <label for="search" style="margin-right: 1rem;">Search files</label>
+      <input type="search" id="search" name="search" />
+    </form>
+  </search>
+
+  <h2 class="form-title">Copy existing files:</h2>
+  {
+    files && (
+      <form
+        class="move-form"
+        hx-post={`/folder/${folderId}/move/files.json`}
+        target={`#${modalId}`}
+      >
+        <div class="file-list">
+          {files.map((file) => (
+            <div class="checkbox-row">
+              <input
+                class="move-checkbox"
+                type="checkbox"
+                id={file.id.toString()}
+                name="fileIds"
+                value={file.id}
+              />
+              <label class="file-name" for={file.id.toString()}>
+                {file.name}
+              </label>
+            </div>
+          ))}
+        </div>
+
+        <button class="primary-button" type="submit">
+          Move
+        </button>
+      </form>
+    )
+  }
 </Modal>
 
-<style is:inline>
-  .modal-body {
-    padding: 0 3rem;
+<style>
+  .file-search-form {
+    margin-bottom: 1rem;
   }
 
   .move-form {
@@ -78,41 +161,105 @@ try {
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
-    min-width: 300px;
-    max-width: 400px;
   }
 
-  label {
+  .form-title {
+    font-size: large;
+    font-weight: normal;
+    margin-left: 0;
+  }
+
+  .move-form label {
     margin-left: 0.5rem;
-  }
-
-  input {
-    margin-bottom: 1rem;
+    flex: 1;
   }
 
   .move-checkbox:checked + label {
     font-weight: bold;
   }
 
-  label,
+  .move-form label,
   .move-checkbox {
     cursor: pointer;
+    margin: 0;
+    margin-right: 1rem;
   }
 
   .move-checkbox {
-    margin-bottom: 1rem;
     transform: scale(1.5);
   }
 
   .checkbox-row {
     display: flex;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-background);
+    border: 1px solid var(--black);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    list-style: none;
+    min-width: 100px;
+  }
+
+  .file-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-gap: 1rem;
+    grid-auto-rows: min-content;
+    margin-bottom: 2rem;
+    height: 100%;
+  }
+
+  .file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-name:focus-within {
+    outline: auto;
+  }
+
+  .primary-button {
+    margin-left: auto;
+    min-width: 100px;
+    float: right;
   }
 
   /* Mobile */
   @media (max-width: 37.5em) {
-    .modal-body {
-      padding: 0;
+    .file-search-form {
+      margin-bottom: 0;
+    }
+
+    search label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    search input {
+      width: 100%;
+    }
+
+    .move-form,
+    .form-title {
+      min-width: 100%;
+      margin: 1rem auto;
+    }
+
+    .file-list {
+      grid-template-columns: repeat(auto-fill, 100%);
+    }
+
+    .checkbox-row {
+      padding-right: 0.5rem;
+    }
+
+    .primary-button {
+      margin-left: 0;
+      width: 100%;
     }
   }
 </style>
