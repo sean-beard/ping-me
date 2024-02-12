@@ -91,7 +91,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
               <ul id="folder-add-menu-id" class="list">
                 <li>
-                  <a href={`/folder/${folderId}/file/new`}>Add file</a>
+                  <a href={`/folder/${folderId}/file/new`}>Create file</a>
                 </li>
                 <hr />
                 <li>
@@ -145,6 +145,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
 
   hr {
     margin: 0;
+    width: 100%;
   }
 
   .toggle-button {
@@ -188,7 +189,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
     background-color: transparent;
     border: none;
     color: var(--text);
-    font: inherit;
+    font-size: large;
   }
 
   .list.open a {
@@ -197,7 +198,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
     margin: 0 auto;
     text-decoration: none;
     color: var(--text);
-    font-size: inherit;
+    font-size: large;
     text-align: center;
   }
 
