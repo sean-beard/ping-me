@@ -44,7 +44,9 @@ const { modalId, closeButtonId } = Astro.props;
       </button>
     </div>
 
-    <slot />
+    <div class="modal-body">
+      <slot />
+    </div>
   </div>
 </dialog>
 
@@ -82,6 +84,12 @@ const { modalId, closeButtonId } = Astro.props;
   .modal-header {
     display: flex;
     justify-content: flex-end;
+  }
+
+  .modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .close {
