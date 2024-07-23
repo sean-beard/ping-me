@@ -133,7 +133,11 @@ try {
                 name="folderIds"
                 value={folder.id}
               />
-              <label class="folder-name" for={folder.id.toString()}>
+              <label
+                class="folder-name"
+                for={folder.id.toString()}
+                title={folder.name}
+              >
                 {folder.name}
               </label>
             </div>

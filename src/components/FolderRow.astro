@@ -49,7 +49,9 @@ const { folderId, folderName, isEditing } = Astro.props;
   !isEditing && (
     <li id={`folder-${folderId}-row`} hx-swap="outerHTML" class="folder-row">
       <div class="folder-name">
-        <a href={`/folder/${folderId}`}>{folderName}</a>
+        <a href={`/folder/${folderId}`} title={folderName}>
+          {folderName}
+        </a>
       </div>
 
       <ButtonMenu
