@@ -136,7 +136,11 @@ try {
                 name="fileIds"
                 value={file.id}
               />
-              <label class="file-name" for={file.id.toString()}>
+              <label
+                class="file-name"
+                for={file.id.toString()}
+                title={file.name}
+              >
                 {file.name}
               </label>
             </div>
