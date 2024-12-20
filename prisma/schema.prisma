@@ -40,12 +40,13 @@ model Password {
 // }
 
 model File {
-  id      Int      @id @default(autoincrement())
-  name    String
-  html    String
-  folders Folder[]
-  user    User     @relation(fields: [userId], references: [id])
-  userId  Int
+  id        Int      @id @default(autoincrement())
+  name      String
+  html      String
+  folders   Folder[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Folder {
