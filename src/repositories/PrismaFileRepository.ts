@@ -13,12 +13,12 @@ export class PrismaFileRepository {
       const files = await this.client.file.findMany({
         select: { id: true, name: true, html: true, userId: true },
         where: { userId },
-        orderBy: { id: "desc" },
+        orderBy: { updatedAt: "desc" },
       });
 
       return files;
-    } catch {
-      console.error("Error getting files");
+    } catch (error) {
+      console.error("Error getting files", error);
       return null;
     }
   }
