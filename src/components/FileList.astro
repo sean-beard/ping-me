@@ -11,73 +11,151 @@ const { files, folderId } = Astro.props;
 ---
 
 <script>
-  const searchForm = document.querySelector<HTMLFormElement>("search form");
-
-  searchForm?.addEventListener("submit", (event) => {
-    event.preventDefault();
-  });
-
-  const searchInput = document.querySelector<HTMLInputElement>("search input");
-
-  if (!searchInput) {
-    throw new Error("Search input not found");
+  interface SearchResult {
+    element: HTMLElement;
+    matchScore: number;
   }
 
-  const filterRows = (searchValue: string) => {
+  /**
+   * Tokenizes text into words for full-text search.
+   * Splits on whitespace and common punctuation.
+   */
+  function tokenize(text: string): string[] {
+    return text
+      .toLowerCase()
+      .split(/\s+|[\-_.\/]/g)
+      .filter((token) => token.length > 0);
+  }
+
+  /**
+   * Performs full-text search with tokenization.
+   * Searches both file name and content.
+   * All search terms must be present (AND logic).
+   * Returns a match score based on relevance.
+   */
+  function performFullTextSearch(
+    fileName: string,
+    fileContent: string,
+    searchTerms: string[],
+  ): number | null {
+    if (searchTerms.length === 0) return 1; // No search = show all
+
+    // Combine name and content for searching
+    const searchableText = `${fileName} ${fileContent}`;
+    const searchableTokens = tokenize(searchableText);
+    const searchableStr = searchableTokens.join(" ");
+
+    // Check if all search terms exist in the combined text
+    const allTermsMatch = searchTerms.every((term) => {
+      return (
+        searchableTokens.some((token) => token.includes(term)) ||
+        searchableStr.includes(term)
+      );
+    });
+
+    if (!allTermsMatch) return null;
+
+    // Calculate match score: name matches score higher than content matches
+    let score = 1;
+    const fileNameTokens = tokenize(fileName);
+    const fileNameStr = fileNameTokens.join(" ");
+    const contentTokens = tokenize(fileContent);
+    const contentStr = contentTokens.join(" ");
+
+    searchTerms.forEach((term) => {
+      // Name matches get 2x weight
+      const nameIndex = fileNameStr.indexOf(term);
+      if (nameIndex !== -1) {
+        score += Math.max(0, 2 - nameIndex / 100);
+      } else {
+        // Content matches get 1x weight
+        const contentIndex = contentStr.indexOf(term);
+        if (contentIndex !== -1) {
+          score += Math.max(0, 1 - contentIndex / 100);
+        }
+      }
+    });
+
+    return score;
+  }
+
+  /**
+   * Updates visibility of file rows based on search query.
+   * Maintains scroll position by setting fixed height during transition.
+   */
+  function updateFileListDisplay(searchQuery: string): void {
     const fileRows = document.querySelectorAll<HTMLDivElement>(".file-row");
-
-    if (!fileRows) {
-      throw new Error("File rows not found");
-    }
-
     const fileList = document.querySelector<HTMLUListElement>(".file-list");
 
-    const fileListHeight = fileList?.offsetHeight;
-
-    // Prevent the scroll position from jumping when the rows are hidden/shown
-    if (fileListHeight) {
-      fileList.style.height = fileListHeight + "px";
+    if (!fileList) {
+      console.error("File list not found");
+      return;
     }
 
+    // Prevent scroll jump during filtering
+    const scrollableHeight = fileList.offsetHeight;
+    if (scrollableHeight > 0) {
+      fileList.style.height = `${scrollableHeight}px`;
+    }
+
+    const searchTerms = tokenize(searchQuery);
+    const results: SearchResult[] = [];
+
+    // Evaluate all rows and collect results
     fileRows.forEach((row) => {
       const fileNameElement = row.querySelector(".file-name");
+      if (!fileNameElement?.textContent) return;
 
-      if (!fileNameElement) {
-        throw new Error("File name element not found");
-      }
+      const fileName = fileNameElement.textContent;
+      const fileContent = row.dataset.fileContent || "";
+      const matchScore = performFullTextSearch(
+        fileName,
+        fileContent,
+        searchTerms,
+      );
 
-      const fileName = fileNameElement.textContent?.toLowerCase() ?? "";
-
-      if (fileName.includes(searchValue)) {
+      if (matchScore !== null) {
+        results.push({ element: row, matchScore });
         row.style.display = "flex";
       } else {
         row.style.display = "none";
       }
     });
 
-    // Without this the container will be too large when there are lots of files
-    if (fileListHeight && fileListHeight > window.innerHeight) {
-      fileList.style.height = "70vh";
-    }
-  };
+    // Sort results by match score (highest first)
+    results.sort((a, b) => b.matchScore - a.matchScore);
 
-  if (searchInput.value) {
-    filterRows(searchInput.value.toLowerCase());
+    // Reorder elements in DOM based on relevance
+    results.forEach(({ element }) => {
+      fileList.appendChild(element);
+    });
+
+    fileList.style.height = "auto";
   }
 
-  searchInput.addEventListener("keyup", (event) => {
-    const searchInputElement = event.target as HTMLInputElement;
-    const searchValue = searchInputElement.value.toLowerCase();
+  // Initialize search form
+  const searchForm = document.querySelector<HTMLFormElement>("search form");
+  const searchInput = document.querySelector<HTMLInputElement>("search input");
 
-    filterRows(searchValue);
+  if (!searchInput) {
+    console.error("Search input not found");
+  } else {
+    // Prevent form submission
+    searchForm?.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
 
-    if (!searchValue) {
-      const fileList = document.querySelector<HTMLUListElement>(".file-list");
-      if (fileList) {
-        fileList.style.height = "auto";
-      }
+    // Execute initial search if input has value
+    if (searchInput.value) {
+      updateFileListDisplay(searchInput.value);
     }
-  });
+
+    // Listen for search input changes
+    searchInput.addEventListener("input", (event) => {
+      const target = event.target as HTMLInputElement;
+      updateFileListDisplay(target.value);
+    });
+  }
 </script>
 
 <div id="file-list-container" style="padding: 1rem 0;">
@@ -91,7 +169,11 @@ const { files, folderId } = Astro.props;
   <ul class="file-list">
     {
       files.map((file) => (
-        <li id={"folder-" + file.id.toString()} class="file-row">
+        <li
+          id={"folder-" + file.id.toString()}
+          class="file-row"
+          data-file-content={file.html.toLowerCase()}
+        >
           <div class="file-name">
             <a href={`/file/${file.id}`} title={file.name}>
               {file.name}
