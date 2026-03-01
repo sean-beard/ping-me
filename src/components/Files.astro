@@ -65,13 +65,7 @@ const fileCount = files?.length ? `(${files.length})` : "";
     </a>
   </div>
 
-  {
-    files && (
-      <div class="file-list">
-        <FileList files={files} />{" "}
-      </div>
-    )
-  }
+  {files && <FileList files={files} />}
 </div>
 
 <style>
